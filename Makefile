@@ -4,7 +4,7 @@ CC = mpicc
 OPT_CC = cc
 CFLAGS = -O3 -Wall
 LDLIBS = -lm
-OBJFILES = sso.o
+OBJFILES = print_matrix.o init_positions.o sso.o
 TARGET = sso
 
 all: $(TARGET)
