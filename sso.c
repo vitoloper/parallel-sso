@@ -191,18 +191,27 @@ int main(int argc, char *argv[])
     /* Print local initial solutions */
     print_matrix(rank, X_local, np_local, tc_params[tc].nd);
 
+    /***********************************/
+    /* NOTE: add in tc_params if it's a min or max problem */
     /* TODO: compute_movement(X_local, np_local, tc_params) */
     /* TODO: mpi_Gatherv */
     /* TODO: process 0 prints solutions */
+    /* TODO (maybe): process 0 prints OF min/max found */
+    /***********************************/
 
     /* Stop the timer (get the total elapsed time) */
     MPI_Barrier(MPI_COMM_WORLD);
     elapsed_time += MPI_Wtime();
 
+    /* Free the datatype */
     MPI_Type_free(&row_type);
 
+    /* Free heap space */
+    free(X_local_storage);
+    free(X_local);
+
     if (rank == 0) {
-        /* free heap space */
+        /* Free heap space */
         free(X);
         free(X_storage);
         free(sendcounts);
