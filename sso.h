@@ -8,6 +8,7 @@
 #define MALLOC_ERROR -2
 #define TYPE_ERROR -3
 #define ARGC_ERROR -4
+#define TC_ERROR -5
 
 /* Block utility macros */
 #define BLOCK_LOW(id, p, n) ((id) * (n) / (p))
@@ -17,11 +18,23 @@
 /* Basic MPI datatype to use */
 #define NUM_DT MPI_DOUBLE
 
+/* Number of available test cases */
+#define NUM_OF_TC 1
+
 /* Basic C language type to use */
 typedef double num_t;
 
+/* test case parameters struct */
+/* TODO: maybe include a function pointer the objective function */
+struct tc_params_s {
+    int nd;
+    num_t low;
+    num_t high;
+};
+
 /* Function declarations */
 void print_usage(char *);
+void init_tc_params(struct tc_params_s *);
 void print_matrix(num_t **, int, int);
 void init_positions(num_t **, int, int, num_t, num_t);
 
