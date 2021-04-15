@@ -9,6 +9,7 @@
 #define TYPE_ERROR -3
 #define ARGC_ERROR -4
 #define TC_ERROR -5
+#define STRTOL_ERROR -6
 
 /* Block utility macros */
 #define BLOCK_LOW(id, p, n) ((id) * (n) / (p))

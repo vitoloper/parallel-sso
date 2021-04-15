@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <errno.h>
 
 #include "mpi.h"
 
@@ -19,11 +20,11 @@ int main(int argc, char *argv[])
     int np;           /* population size */
     int tc;           /* test case to run */
     int i;            /* loop control variable */
-    num_t low, high;  /* allowed decision variables range */
     num_t **X;        /* position (solution) vectors (np*nd matrix) */
     num_t *X_storage; /* storage for X values (contiguous memory) */
     struct tc_params_s tc_params[NUM_OF_TC]; /* Test cases parameters array */
-    double elapsed_time;                     /* elapsed time */
+    char *endptr;        /* location of the first invalid char (strtol) */
+    double elapsed_time; /* elapsed time */
 
     MPI_Init(&argc, &argv);
 
@@ -43,13 +44,35 @@ int main(int argc, char *argv[])
         exit(ARGC_ERROR);
     }
 
-    /*TODO: check strtol errno values */
-    /* Set population size */
-    np = (int)strtol(argv[1], NULL, 10);
+    /* Set population size (check strtol errors) */
+    errno = 0;
+    np = (int)strtol(argv[1], &endptr, 10);
+    if (errno != 0 || endptr == argv[1]) {
+        if (rank == 0) {
+            printf("%s: error: invalid NP parameter\n", argv[0]);
+        }
+        MPI_Finalize();
+        exit(STRTOL_ERROR);
+    }
 
-    /* TODO: check TC existence */
-    /* Set test case */
-    tc = (int)strtol(argv[2], NULL, 10);
+    /* Set test case (check strtol errors) */
+    errno = 0;
+    tc = (int)strtol(argv[2], &endptr, 10);
+    if (errno != 0 || endptr == argv[1]) {
+        if (rank == 0) {
+            printf("%s: error: invalid TC parameter\n", argv[0]);
+        }
+        MPI_Finalize();
+        exit(STRTOL_ERROR);
+    }
+    if (tc >= NUM_OF_TC) {
+        if (rank == 0) {
+            printf("%s: error: the selected test case does not exist\n",
+                   argv[0]);
+        }
+        MPI_Finalize();
+        exit(TC_ERROR);
+    }
 
     /* Initialize test case parameters array */
     init_tc_params(tc_params);
@@ -63,6 +86,13 @@ int main(int argc, char *argv[])
 
     /* Process 0: generate np*nd matrix */
     if (rank == 0) {
+        /* Print information */
+        printf("NP (population size): %d\n", np);
+        printf("TC (test case): %d\n", tc);
+        printf("nd (number of decision variables): %d\n", tc_params[tc].nd);
+        printf("low (decision variable lower limit): %9.6f\n", tc_params[tc].low);
+        printf("high (decision variable upper limit): %9.6f\n\n", tc_params[tc].high);
+
         /* Allocate space for X matrix storage */
         X_storage = (num_t *)malloc(np * tc_params[tc].nd * sizeof(num_t));
         if (X_storage == NULL) {
@@ -129,6 +159,6 @@ void print_usage(char *name)
     printf("TC: test case\n\n");
     printf("TC is a number which can assume the following values:\n");
     printf("0) Elliptic Paraboloid\n");
-    printf("1) Rastrigin Benchmark Function\n\n");
+    // printf("1) Rastrigin Benchmark Function\n\n");
     fflush(stdout);
 }
