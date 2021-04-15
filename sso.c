@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     int size;            /* number of processes */
     int np = 5;          /* population size */
     int nd = 2;          /* number of decision variables */
-    int i, j;            /* loop control variables */
+    int i;               /* loop control variable */
     num_t **X;           /* position (solution) vectors (np*nd matrix) */
     num_t *X_storage;    /* storage for X values (contiguous memory) */
     double elapsed_time; /* elapsed time */
@@ -31,6 +31,13 @@ int main(int argc, char *argv[])
 
     MPI_Comm_rank(MPI_COMM_WORLD, &rank); /* Get my rank */
     MPI_Comm_size(MPI_COMM_WORLD, &size); /* Get number of processes */
+
+    if (argc != 3) {
+        if (rank == 0) {
+            print_usage(argv[0]);
+            MPI_Abort(MPI_COMM_WORLD, ARGC_ERROR);
+        }
+    }
 
     /* Set the seed for the pseudo-random number generator */
     srand((unsigned int)time(NULL) + rank);
@@ -80,4 +87,16 @@ int main(int argc, char *argv[])
 
     MPI_Finalize();
     return 0;
+}
+
+/* Print usage information */
+void print_usage(char *name)
+{
+    printf("Usage: %s NP TC\n", name);
+    printf("NP: population size\n");
+    printf("TC: test case\n\n");
+    printf("TC is a number which can assume the following values:\n");
+    printf("1) Elliptic Paraboloid\n");
+    printf("2) Rastrigin Benchmark Function\n\n");
+    fflush(stdout);
 }
