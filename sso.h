@@ -21,6 +21,6 @@ typedef double num_t;
 
 /* Function declarations */
 void print_matrix(num_t **, int, int);
-void init_positions(num_t **, int, int);
+void init_positions(num_t **, int, int, num_t, num_t);
 
 #endif /* SSO_H */

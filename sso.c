@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "mpi.h"
 
@@ -15,8 +16,8 @@ int main(int argc, char *argv[])
 {
     int rank;            /* rank */
     int size;            /* number of processes */
-    int np = 5;              /* population size */
-    int nd = 2;              /* number of decision variables */
+    int np = 5;          /* population size */
+    int nd = 2;          /* number of decision variables */
     int i, j;            /* loop control variables */
     num_t **X;           /* position (solution) vectors (np*nd matrix) */
     num_t *X_storage;    /* storage for X values (contiguous memory) */
@@ -30,6 +31,9 @@ int main(int argc, char *argv[])
 
     MPI_Comm_rank(MPI_COMM_WORLD, &rank); /* Get my rank */
     MPI_Comm_size(MPI_COMM_WORLD, &size); /* Get number of processes */
+
+    /* Set the seed for the pseudo-random number generator */
+    srand((unsigned int)time(NULL) + rank);
 
     /* Process 0: generate np*nd matrix */
     if (rank == 0) {
@@ -55,8 +59,7 @@ int main(int argc, char *argv[])
         }
 
         /* Generate initial solutions within the feasible search domain */
-        /* TODO */
-        init_positions(X, np, nd);
+        init_positions(X, np, nd, -5, 0);
 
         /* Print initial solution vectors */
         print_matrix(X, np, nd);
