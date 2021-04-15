@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
         MPI_Finalize();
         exit(STRTOL_ERROR);
     }
-    if (tc >= NUM_OF_TC) {
+    if (tc < 0 || tc >= NUM_OF_TC) {
         if (rank == 0) {
             printf("%s: error: the selected test case does not exist\n",
                    argv[0]);
@@ -90,8 +90,10 @@ int main(int argc, char *argv[])
         printf("NP (population size): %d\n", np);
         printf("TC (test case): %d\n", tc);
         printf("nd (number of decision variables): %d\n", tc_params[tc].nd);
-        printf("low (decision variable lower limit): %9.6f\n", tc_params[tc].low);
-        printf("high (decision variable upper limit): %9.6f\n\n", tc_params[tc].high);
+        printf("low (decision variable lower limit): %9.6f\n",
+               tc_params[tc].low);
+        printf("high (decision variable upper limit): %9.6f\n\n",
+               tc_params[tc].high);
 
         /* Allocate space for X matrix storage */
         X_storage = (num_t *)malloc(np * tc_params[tc].nd * sizeof(num_t));
@@ -120,14 +122,14 @@ int main(int argc, char *argv[])
 
         /* Print initial solution vectors */
         print_matrix(X, np, tc_params[tc].nd);
-        // fflush(stdout)
     } /* end if (rank == 0) */
 
     /* TODO
      * Process 0 scatters data among all processes
      *
      * Each process compute its share of solutions:
-     * compute_movement(X_local, np_local, tc)
+     * Maybe include a function pointer to the OF inside tc_params
+     * compute_movement(X_local, np_local, tc_params)
      *
      * Process 0 gathers data from all processes
      * Process 0 prints solution vectors (matrix)
