@@ -95,9 +95,9 @@ int main(int argc, char *argv[])
         printf("NP (population size): %d\n", np);
         printf("TC (test case): %d\n", tc);
         printf("nd (number of decision variables): %d\n", tc_params[tc].nd);
-        printf("low (decision variable lower limit): %9.6f\n",
+        printf("low (decision variables lower limit): %9.6f\n",
                tc_params[tc].low);
-        printf("high (decision variable upper limit): %9.6f\n\n",
+        printf("high (decision variables upper limit): %9.6f\n\n",
                tc_params[tc].high);
 
         /* Allocate space for X matrix storage */
