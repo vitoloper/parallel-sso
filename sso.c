@@ -74,17 +74,22 @@ int main(int argc, char *argv[])
         exit(TC_ERROR);
     }
 
+    /* Check whether there are too many processes */
+    if (size > np) {
+        if (rank == 0) {
+            printf("%s: error: too many processes\n", argv[0]);
+        }
+        MPI_Finalize();
+        exit(TOO_MANY_PROCS_ERROR);
+    }
+
     /* Initialize test case parameters array */
     init_tc_params(tc_params);
-
-    /* DEBUG */
-    // printf("(%d): %d %f %f \n", rank, tc_params[0].nd, tc_params[0].low,
-    // tc_params[0].high);
 
     /* Set the seed for the pseudo-random number generator */
     srand((unsigned int)time(NULL) + rank);
 
-    /* Process 0: generate np*nd matrix */
+    /* Process 0: generate np*nd matrix (solution vectors) */
     if (rank == 0) {
         /* Print information */
         printf("NP (population size): %d\n", np);

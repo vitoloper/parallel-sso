@@ -10,6 +10,7 @@
 #define ARGC_ERROR -4
 #define TC_ERROR -5
 #define STRTOL_ERROR -6
+#define TOO_MANY_PROCS_ERROR -7
 
 /* Block utility macros */
 #define BLOCK_LOW(id, p, n) ((id) * (n) / (p))
