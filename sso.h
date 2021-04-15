@@ -3,15 +3,6 @@
 
 #include "mpi.h"
 
-/* Error definition (use Michael J. Quinn convention as a starting point) */
-#define OPEN_FILE_ERROR -1
-#define MALLOC_ERROR -2
-#define TYPE_ERROR -3
-#define ARGC_ERROR -4
-#define TC_ERROR -5
-#define STRTOL_ERROR -6
-#define TOO_MANY_PROCS_ERROR -7
-
 /* Block utility macros */
 #define BLOCK_LOW(id, p, n) ((id) * (n) / (p))
 #define BLOCK_HIGH(id, p, n) (BLOCK_LOW((id) + 1, p, n) - 1)

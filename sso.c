@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
             print_usage(argv[0]);
         }
         MPI_Finalize();
-        exit(ARGC_ERROR);
+        exit(EXIT_FAILURE);
     }
 
     /* Set population size (check strtol errors) */
@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
             printf("%s: error: invalid NP parameter\n", argv[0]);
         }
         MPI_Finalize();
-        exit(STRTOL_ERROR);
+        exit(EXIT_FAILURE);
     }
 
     /* Set test case (check strtol errors) */
@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
             printf("%s: error: invalid TC parameter\n", argv[0]);
         }
         MPI_Finalize();
-        exit(STRTOL_ERROR);
+        exit(EXIT_FAILURE);
     }
     if (tc < 0 || tc >= NUM_OF_TC) {
         if (rank == 0) {
@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
                    argv[0]);
         }
         MPI_Finalize();
-        exit(TC_ERROR);
+        exit(EXIT_FAILURE);
     }
 
     /* Check whether there are too many processes */
@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
             printf("%s: error: too many processes\n", argv[0]);
         }
         MPI_Finalize();
-        exit(TOO_MANY_PROCS_ERROR);
+        exit(EXIT_FAILURE);
     }
 
     /* Initialize test case parameters array */
@@ -105,7 +105,7 @@ int main(int argc, char *argv[])
         if (X_storage == NULL) {
             printf("(0): malloc error (X_storage)\n");
             fflush(stdout);
-            MPI_Abort(MPI_COMM_WORLD, MALLOC_ERROR);
+            MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
         }
 
         /* Allocate space for np pointers to num_t */
@@ -113,7 +113,7 @@ int main(int argc, char *argv[])
         if (X == NULL) {
             printf("(0): malloc error (X)\n");
             fflush(stdout);
-            MPI_Abort(MPI_COMM_WORLD, MALLOC_ERROR);
+            MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
         }
 
         /* Initialize pointers */
