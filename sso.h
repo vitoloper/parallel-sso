@@ -14,15 +14,20 @@
 /* Number of available test cases */
 #define NUM_OF_TC 1
 
+/* Minimization or maximization of the objective function */
+#define MIN_GOAL -1
+#define MAX_GOAL 1
+
 /* Basic C language type to use */
 typedef double num_t;
 
 /* test case parameters struct */
-/* TODO: maybe include a function pointer the objective function */
 struct tc_params_s {
     int nd;
     num_t low;
     num_t high;
+    int goal;
+    double (*obj_func)(num_t *, int nd);
 };
 
 /* Function declarations */
@@ -31,5 +36,8 @@ void init_tc_params(struct tc_params_s *);
 void print_matrix(int, num_t **, int, int);
 int allocate_cont_matrix(num_t ***, num_t **, int, int);
 void init_positions(num_t **, int, int, num_t, num_t);
+
+/* Objective functions declarations */
+num_t elliptic_paraboloid(num_t *, int nd);
 
 #endif /* SSO_H */

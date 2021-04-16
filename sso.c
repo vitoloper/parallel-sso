@@ -174,6 +174,8 @@ int main(int argc, char *argv[])
     /* TODO (maybe): process 0 prints OF min/max found */
     /***********************************/
 
+    
+
     /* Process 0: gather results from all processes */
     /* TODO: Change. Gather just ONE solution (the best one) from each proc */
     MPI_Gatherv(X_local_storage, np_local, row_type, X_storage, counts, displs,
