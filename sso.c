@@ -109,25 +109,11 @@ int main(int argc, char *argv[])
         printf("high (decision variables upper limit): %9.6f\n\n",
                tc_params[tc].high);
 
-        /* Allocate space for X matrix storage */
-        X_storage = (num_t *)malloc(np * tc_params[tc].nd * sizeof(num_t));
-        if (X_storage == NULL) {
-            printf("(0): malloc error (X_storage)\n");
+        /* Allocate X and X_storage */
+        if (allocate_cont_matrix(&X, &X_storage, np, tc_params[tc].nd) == -1) {
+            printf("(0): matrix allocation error (X, X_storage)\n");
             fflush(stdout);
             MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
-        }
-
-        /* Allocate space for np pointers to num_t */
-        X = (num_t **)malloc(np * sizeof(num_t *));
-        if (X == NULL) {
-            printf("(0): malloc error (X)\n");
-            fflush(stdout);
-            MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
-        }
-
-        /* Initialize pointers */
-        for (i = 0; i < np; i++) {
-            X[i] = &X_storage[i * tc_params[tc].nd];
         }
 
         /* Generate initial solutions within the feasible search domain */
