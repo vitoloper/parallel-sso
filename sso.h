@@ -18,6 +18,9 @@
 #define MIN_GOAL -1
 #define MAX_GOAL 1
 
+/* Differentiation increment */
+#define D_INCR 0.00001
+
 /* Basic C language type to use */
 typedef double num_t;
 
@@ -36,6 +39,7 @@ void init_tc_params(struct tc_params_s *);
 void print_matrix(int, num_t **, int, int);
 int allocate_cont_matrix(num_t ***, num_t **, int, int);
 void init_positions(num_t **, int, int, num_t, num_t);
+int gradient(num_t (*)(num_t *, int), num_t *, int nd, num_t *);
 
 /* Objective functions declarations */
 num_t elliptic_paraboloid(num_t *, int nd);
