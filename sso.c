@@ -146,27 +146,13 @@ int main(int argc, char *argv[])
         }
     } /* end if (rank == 0) */
 
-    /* Allocate space for X_local matrix storage */
+    /* Number of local solutions (local population size) */
     np_local = BLOCK_SIZE(rank, size, np);
-    X_local_storage =
-        (num_t *)malloc(np_local * tc_params[tc].nd * sizeof(num_t));
-    if (X_local_storage == NULL) {
-        printf("(0): malloc error (X_local_storage)\n");
-        fflush(stdout);
-        MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
-    }
 
-    /* Allocate space for np_local pointers to num_t */
-    X_local = (num_t **)malloc(np_local * sizeof(num_t *));
-    if (X_local == NULL) {
-        printf("(0): malloc error (X_local)\n");
-        fflush(stdout);
+    /* Allocate X_local and X_local_storage */
+    if(allocate_cont_matrix(&X_local, &X_local_storage, np_local, tc_params[tc].nd) == -1) {
+        printf("(%d): matrix allocation error (X_local, X_local_storage)\n", rank);
         MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
-    }
-
-    /* Initialize pointers */
-    for (i = 0; i < np_local; i++) {
-        X_local[i] = &X_local_storage[i * tc_params[tc].nd];
     }
 
     /* Initialize row datatype */
