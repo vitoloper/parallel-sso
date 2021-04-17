@@ -21,6 +21,15 @@
 /* Differentiation increment */
 #define D_INCR 0.00001
 
+/* SSO algorithm parameters */
+#define ETA 0.3
+#define ALPHA 0.1
+#define BETA 4
+#define DELTA_T 1
+#define M_POINTS 20
+#define K_MAX 50
+#define INITIAL_VELOCITY 0.5
+
 /* Basic C language type to use */
 typedef double num_t;
 
