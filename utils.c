@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #include "sso.h"
 
@@ -15,6 +16,17 @@ void print_matrix(int rank, num_t **matrix, int m, int n)
         }
         printf("\n");
     }
+}
+
+/* Print a vector of length 'length' */
+void print_vector(int rank, num_t *v, int length)
+{
+    int i;
+
+    for (i = 0; i < length; i++) {
+        printf("(%d): %9.6f ", rank, v[i]);
+    }
+    printf("\n");
 }
 
 /* Allocate matrix using a storage for memory contiguity */
@@ -40,6 +52,79 @@ int allocate_cont_matrix(num_t ***M, num_t **M_storage, int m, int n)
     }
 
     return 1;
+}
+
+/* Allocate 2d matrix */
+int allocate_2d_matrix(num_t ***M, int m, int n)
+{
+    int i;
+
+    *M = (num_t **)malloc(m * sizeof(num_t *));
+    if (*M == NULL) {
+        return -1;
+    }
+
+    for (i = 0; i < m; i++) {
+        (*M)[i] = (num_t *)malloc(n * sizeof(num_t));
+        if ((*M)[i] == NULL) {
+            return -1;
+        }
+    }
+
+    return 1;
+}
+
+/* Free 2d matrix */
+void free_2d_matrix(num_t ***M, int m)
+{
+    int i;
+
+    for (i = 0; i < m; i++) {
+        free((*M)[i]);
+    }
+
+    free(*M);
+}
+
+/* Allocate 3d matrix */
+int allocate_3d_matrix(num_t ****M, int m, int n, int p)
+{
+    int i, j;
+
+    *M = (num_t ***)malloc(m * sizeof(num_t **));
+    if (*M == NULL) {
+        return -1;
+    }
+
+    for (i = 0; i < m; i++) {
+        (*M)[i] = (num_t **)malloc(n * sizeof(num_t *));
+        if ((*M)[i] == NULL) {
+            return -1;
+        }
+        for (j = 0; j < n; j++) {
+            (*M)[i][j] = (num_t *)malloc(p * sizeof(num_t));
+            if ((*M)[i][j] == NULL) {
+                return -1;
+            }
+        }
+    }
+
+    return 1;
+}
+
+/* Free 3d matrix */
+void free_3d_matrix(num_t ****M, int m, int n)
+{
+    int i, j;
+
+    for (i = 0; i < m; i++) {
+        for (j = 0; j < n; j++) {
+            free((*M)[i][j]);
+        }
+        free((*M)[i]);
+    }
+
+    free(*M);
 }
 
 /*
@@ -88,4 +173,15 @@ int gradient(num_t (*f)(num_t *, int), num_t *X, int nd, num_t *result)
     free(current_X_left);
 
     return 1;
+}
+
+/* Given two values, return 0 if the first number has a lower abs value. Return
+ * 1 otherwise. */
+int min_abs(num_t a, num_t b)
+{
+    if (fabs((double)a) < fabs((double)b)) {
+        return 0;
+    } else {
+        return 1;
+    }
 }

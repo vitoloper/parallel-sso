@@ -34,14 +34,24 @@ struct tc_params_s {
 };
 
 /* Function declarations */
+
 void print_usage(char *);
 void init_tc_params(struct tc_params_s *);
 void print_matrix(int, num_t **, int, int);
+void print_vector(int, num_t *, int);
+
+/* Matrix allocation functions */
 int allocate_cont_matrix(num_t ***, num_t **, int, int);
+int allocate_2d_matrix(num_t ***, int, int);
+void free_2d_matrix(num_t ***, int);
+int allocate_3d_matrix(num_t ****, int, int, int);
+void free_3d_matrix(num_t ****, int, int);
+
 void init_positions(num_t **, int, int, num_t, num_t);
 int gradient(num_t (*)(num_t *, int), num_t *, int nd, num_t *);
+int min_abs(num_t, num_t);
 
-/* Objective functions declarations */
+/* Objective functions */
 num_t elliptic_paraboloid(num_t *, int nd);
 
 #endif /* SSO_H */
