@@ -1,6 +1,6 @@
 /* Application used to test the utility functions in utils.c
  * Compile with:
- * mpicc -Wall -g -lm test-utils.c utils.c -o test-utils
+ * mpicc -Wall -g -lm test_utils.c utils.c -o test_utils
  *
  * Check for memory leaks with valgrind:
  * valgrind --leak-check=yes ./test-utils
