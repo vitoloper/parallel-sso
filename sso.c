@@ -189,8 +189,8 @@ int main(int argc, char *argv[])
     MPI_Type_free(&row_type);
 
     /* Free heap space */
-    free(X_local_storage);
     free(X_local);
+    free(X_local_storage);
 
     if (rank == 0) {
         /* Print final solution vectors */
