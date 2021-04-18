@@ -12,7 +12,7 @@
 #define NUM_DT MPI_DOUBLE
 
 /* Number of available test cases */
-#define NUM_OF_TC 1
+#define NUM_OF_TC 2
 
 /* Minimization or maximization of the objective function */
 #define MIN_GOAL -1
@@ -21,25 +21,23 @@
 /* Differentiation increment */
 #define D_INCR 0.00001
 
-/* SSO algorithm parameters */
-#define ETA 0.3
-#define ALPHA 0.1
-#define BETA 4
-#define DELTA_T 1
-#define M_POINTS 20
-#define K_MAX 50
-#define INITIAL_VELOCITY 0.5
-
 /* Basic C language type to use */
 typedef double num_t;
 
 /* test case parameters struct */
 struct tc_params_s {
-    int nd;
-    num_t low;
-    num_t high;
-    int goal;
-    double (*obj_func)(num_t *, int nd);
+    int nd;                              /* number of decision variables */
+    num_t low;                           /* decision variables lower bound */
+    num_t high;                          /* decision veriables upper bound */
+    int goal;                            /* MIN_GOAL / MAX_GOAL */
+    double (*obj_func)(num_t *, int nd); /* objective function */
+    num_t eta;                           /* eta */
+    num_t alpha;                         /* alpha */
+    num_t beta;                          /* beta */
+    num_t delta_t;                       /* delta_t*/
+    num_t m_points;                      /* M (local search) */
+    num_t k_max;                         /* total steps */
+    num_t initial_velocity;              /* initial velocity */
 };
 
 /* Function declarations */
@@ -59,11 +57,11 @@ void free_3d_matrix(num_t ****M, int m, int n);
 void init_positions(num_t **X, int np, int nd, num_t low, num_t high);
 int gradient(num_t (*f)(num_t *, int), num_t *X, int nd, num_t *result);
 int min_abs(num_t a, num_t b);
-void compute_best_solution(num_t (*obj_func)(num_t *, int), int goal, num_t **X,
-                           int np, int nd, num_t *best_solution,
-                           num_t *best_val);
+void compute_best_solution(struct tc_params_s tc_params, num_t **X, int np,
+                           num_t *best_solution, num_t *best_val);
 
 /* Objective functions */
 num_t elliptic_paraboloid(num_t *X, int nd);
+num_t goldstein_price(num_t *X, int nd);
 
 #endif /* SSO_H */
