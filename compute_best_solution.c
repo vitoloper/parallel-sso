@@ -9,7 +9,6 @@
 /* TODO
  * - improve function by assigning OF values to variables
  * - improve final min/max search
- * - check with valgrind
  */
 
 /*
@@ -71,7 +70,8 @@ void compute_best_solution(struct tc_params_s tc_params, num_t **X, int np,
             /* Compute gradient */
             // print_vector(0, X[i], nd);
             gradient(tc_params.obj_func, X[i], tc_params.nd, gradient_result);
-            // print_vector(0, gradient_result, nd);
+            // printf("k = %d, NP = %d  ", k, i);
+            // print_vector(0, gradient_result, tc_params.nd);
 
             /* Compute velocities */
             for (j = 0; j < tc_params.nd; j++) {
@@ -120,8 +120,8 @@ void compute_best_solution(struct tc_params_s tc_params, num_t **X, int np,
     } /* end K_MAX loop */
 
     /* Choose the best solution among the NP solutions */
-    // printf("Final solution vectors:\n");
-    // print_matrix(0, X, np, tc_params.nd);
+    printf("Final solution vectors:\n");
+    print_matrix(0, X, np, tc_params.nd);
 
     memcpy(best_solution, X[0], tc_params.nd * sizeof(num_t));
     *best_val = tc_params.obj_func(best_solution, tc_params.nd);

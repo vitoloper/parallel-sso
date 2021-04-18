@@ -137,13 +137,10 @@ void free_3d_matrix(num_t ****M, int m, int n)
  */
 int gradient(num_t (*f)(num_t *, int), num_t *X, int nd, num_t *result)
 {
-    num_t h;
     int i;
     num_t *current_X_right;
     num_t *current_X_left;
-
-    /* Set differentiation increment */
-    h = D_INCR;
+    num_t h = 0.00001;
 
     /* Allocate current_X_right */
     current_X_right = (num_t *)malloc(nd * sizeof(num_t));

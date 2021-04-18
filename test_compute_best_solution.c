@@ -15,7 +15,7 @@
 int main()
 {
     num_t **X;
-    int np = 10;
+    int np = 20;
     int nd = 2;
     num_t *best_solution;
     num_t best_val;
@@ -35,7 +35,7 @@ int main()
 
     /* Minimization of an ellpitic paraboloid function */
     printf("Minimization of an elliptic paraboloid function\n");
-    init_positions(X, np, nd, -20, 20);
+    init_positions(X, np, tc_params[0].nd, tc_params[0].low, tc_params[0].high);
     // printf("Initial positions:\n");
     // print_matrix(0, X, np, nd);
     compute_best_solution(tc_params[0], X, np,
@@ -45,7 +45,7 @@ int main()
 
     /* Minimization of Goldstein-Price function */
     printf("Minimization of Goldstein-Price function\n");
-    init_positions(X, np, nd, -2, 2);
+    init_positions(X, np, tc_params[1].nd, tc_params[1].low, tc_params[1].high);
     // printf("Initial positions:\n");
     // print_matrix(0, X, np, nd);
     compute_best_solution(tc_params[1], X, np,
@@ -55,13 +55,27 @@ int main()
 
     /* Maximization of "flipped" Goldstein-Price function */
     printf("Maximization of \"flipped\" of Goldstein-Price function\n");
-    init_positions(X, np, nd, -2, 2);
+    init_positions(X, np, tc_params[2].nd, tc_params[2].low, tc_params[2].high);
     // printf("Initial positions:\n");
     // print_matrix(0, X, np, nd);
     compute_best_solution(tc_params[2], X, np,
                           best_solution, &best_val);
     printf("Best solution: [%f, %f]\n", best_solution[0], best_solution[1]);
     printf("Maximum value: %f\n\n", best_val);
+
+    /* Minimization of Rastrigin function */
+    printf("Minimization of Rastrigin function (two decision variables)\n");
+    init_positions(X, np, tc_params[3].nd, tc_params[3].low, tc_params[3].high);
+    printf("Initial positions:\n");
+    print_matrix(0, X, np, nd);
+    compute_best_solution(tc_params[3], X, np,
+                          best_solution, &best_val);
+    printf("\nBest solution: [%f, %f]\n", best_solution[0], best_solution[1]);
+    printf("Minimum value: %f\n\n", best_val);
+
+    best_solution[0] = 0;
+    best_solution[1] = 0;
+    printf("Rastrigin at [0,0]: %f\n", rastrigin(best_solution, 2));
 
     /* Free heap space */
     free(best_solution);

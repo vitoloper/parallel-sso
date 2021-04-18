@@ -12,14 +12,11 @@
 #define NUM_DT MPI_DOUBLE
 
 /* Number of available test cases */
-#define NUM_OF_TC 3
+#define NUM_OF_TC 4
 
 /* Minimization or maximization of the objective function */
 #define MIN_GOAL -1
 #define MAX_GOAL 1
-
-/* Differentiation increment */
-#define D_INCR 0.00001
 
 /* Basic C language type to use */
 typedef double num_t;
@@ -64,5 +61,6 @@ void compute_best_solution(struct tc_params_s tc_params, num_t **X, int np,
 num_t elliptic_paraboloid(num_t *X, int nd);
 num_t goldstein_price(num_t *X, int nd);
 num_t flipped_goldstein_price(num_t *X, int nd);
+num_t rastrigin(num_t *X, int nd);
 
 #endif /* SSO_H */
