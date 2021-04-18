@@ -44,26 +44,26 @@ struct tc_params_s {
 
 /* Function declarations */
 
-void print_usage(char *);
-void init_tc_params(struct tc_params_s *);
-void print_matrix(int, num_t **, int, int);
-void print_vector(int, num_t *, int);
+void print_usage(char *name);
+void init_tc_params(struct tc_params_s *tc_params);
+void print_matrix(int rank, num_t **matrix, int m, int n);
+void print_vector(int rank, num_t *v, int length);
 
 /* Matrix allocation functions */
-int allocate_cont_matrix(num_t ***, num_t **, int, int);
-int allocate_2d_matrix(num_t ***, int, int);
-void free_2d_matrix(num_t ***, int);
-int allocate_3d_matrix(num_t ****, int, int, int);
-void free_3d_matrix(num_t ****, int, int);
+int allocate_cont_matrix(num_t ***M, num_t **M_storage, int m, int n);
+int allocate_2d_matrix(num_t ***M, int m, int n);
+void free_2d_matrix(num_t ***M, int m);
+int allocate_3d_matrix(num_t ****M, int m, int n, int p);
+void free_3d_matrix(num_t ****M, int m, int n);
 
-void init_positions(num_t **, int, int, num_t, num_t);
-int gradient(num_t (*)(num_t *, int), num_t *, int nd, num_t *);
-int min_abs(num_t, num_t);
-void compute_best_solution(num_t (*)(num_t *, int), int, num_t **,
-                           int, int, num_t *,
-                           num_t *);
+void init_positions(num_t **X, int np, int nd, num_t low, num_t high);
+int gradient(num_t (*f)(num_t *, int), num_t *X, int nd, num_t *result);
+int min_abs(num_t a, num_t b);
+void compute_best_solution(num_t (*obj_func)(num_t *, int), int goal, num_t **X,
+                           int np, int nd, num_t *best_solution,
+                           num_t *best_val);
 
 /* Objective functions */
-num_t elliptic_paraboloid(num_t *, int nd);
+num_t elliptic_paraboloid(num_t *X, int nd);
 
 #endif /* SSO_H */
