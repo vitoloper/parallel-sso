@@ -3,7 +3,7 @@
  * mpicc -Wall -g -lm test_utils.c utils.c -o test_utils
  *
  * Check for memory leaks with valgrind:
- * valgrind --leak-check=yes ./test-utils
+ * valgrind --leak-check=yes ./test_utils
  *
  */
 #include <stdio.h>
