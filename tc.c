@@ -25,9 +25,23 @@ void init_tc_params(struct tc_params_s *tc_params)
     tc_params[1].obj_func = goldstein_price;
     tc_params[1].eta = 0.001;
     tc_params[1].alpha = 0.1;
-    tc_params[1].beta = 4;
+    tc_params[1].beta = 3.5;
     tc_params[1].delta_t = 1;
     tc_params[1].m_points = 20;
     tc_params[1].k_max = 50;
     tc_params[1].initial_velocity = 0.5;
+
+    /* "Flipped" Goldstein-Price function */
+    tc_params[2].nd = 2;
+    tc_params[2].low = -2;
+    tc_params[2].high = 2;
+    tc_params[2].goal = MAX_GOAL;
+    tc_params[2].obj_func = flipped_goldstein_price;
+    tc_params[2].eta = 0.001;
+    tc_params[2].alpha = 0.1;
+    tc_params[2].beta = 3.5;
+    tc_params[2].delta_t = 1;
+    tc_params[2].m_points = 20;
+    tc_params[2].k_max = 50;
+    tc_params[2].initial_velocity = 0.5;
 }

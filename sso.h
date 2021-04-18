@@ -12,7 +12,7 @@
 #define NUM_DT MPI_DOUBLE
 
 /* Number of available test cases */
-#define NUM_OF_TC 2
+#define NUM_OF_TC 3
 
 /* Minimization or maximization of the objective function */
 #define MIN_GOAL -1
@@ -63,5 +63,6 @@ void compute_best_solution(struct tc_params_s tc_params, num_t **X, int np,
 /* Objective functions */
 num_t elliptic_paraboloid(num_t *X, int nd);
 num_t goldstein_price(num_t *X, int nd);
+num_t flipped_goldstein_price(num_t *X, int nd);
 
 #endif /* SSO_H */

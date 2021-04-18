@@ -18,7 +18,7 @@ int main()
     int np = 10;
     int nd = 2;
     num_t *best_solution;
-    num_t best_minval;
+    num_t best_val;
     struct tc_params_s tc_params[NUM_OF_TC]; /* Test cases parameters array */
 
     /* Seed the PRNG */
@@ -35,28 +35,33 @@ int main()
 
     /* Minimization of an ellpitic paraboloid function */
     printf("Minimization of an elliptic paraboloid function\n");
-    printf("Initial positions:\n");
     init_positions(X, np, nd, -20, 20);
-    print_matrix(0, X, np, nd);
+    // printf("Initial positions:\n");
+    // print_matrix(0, X, np, nd);
     compute_best_solution(tc_params[0], X, np,
-                          best_solution, &best_minval);
+                          best_solution, &best_val);
     printf("Best solution: [%f, %f]\n", best_solution[0], best_solution[1]);
-    printf("Minimum value: %f\n\n", best_minval);
+    printf("Minimum value: %f\n\n", best_val);
 
     /* Minimization of Goldstein-Price function */
     printf("Minimization of Goldstein-Price function\n");
     init_positions(X, np, nd, -2, 2);
-    printf("Initial positions:\n");
-    print_matrix(0, X, np, nd);
+    // printf("Initial positions:\n");
+    // print_matrix(0, X, np, nd);
     compute_best_solution(tc_params[1], X, np,
-                          best_solution, &best_minval);
+                          best_solution, &best_val);
     printf("Best solution: [%f, %f]\n", best_solution[0], best_solution[1]);
-    printf("Minimum value: %f\n\n", best_minval);
+    printf("Minimum value: %f\n\n", best_val);
 
-    best_solution[0] = 0;
-    best_solution[1] = -1;
-
-    printf("GP function in [0, -1]: %f\n", goldstein_price(best_solution, nd));
+    /* Maximization of "flipped" Goldstein-Price function */
+    printf("Maximization of \"flipped\" of Goldstein-Price function\n");
+    init_positions(X, np, nd, -2, 2);
+    // printf("Initial positions:\n");
+    // print_matrix(0, X, np, nd);
+    compute_best_solution(tc_params[2], X, np,
+                          best_solution, &best_val);
+    printf("Best solution: [%f, %f]\n", best_solution[0], best_solution[1]);
+    printf("Maximum value: %f\n\n", best_val);
 
     /* Free heap space */
     free(best_solution);
