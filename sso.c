@@ -110,6 +110,8 @@ int main(int argc, char *argv[])
         /* Print information */
         printf("NP (population size): %d\n", np);
         printf("TC (test case): %d\n", tc);
+        printf("Goal: %s\n", tc_params[tc].goal == MIN_GOAL ? "minimization"
+                                                              : "maximization");
         printf("nd (number of decision variables): %d\n", tc_params[tc].nd);
         printf("low (decision variables lower limit): %9.6f\n",
                tc_params[tc].low);
@@ -225,7 +227,8 @@ int main(int argc, char *argv[])
 
     /* Find the best solution among all processes solutions */
     if (rank == 0) {
-        printf("Final solutions from all processes (OF value in last column):\n");
+        printf(
+            "Final solutions from all processes (OF value in last column):\n");
         print_matrix(0, best_solutions, size, tc_params[tc].nd + 1);
 
         best_val_idx = 0;
