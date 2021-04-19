@@ -200,8 +200,12 @@ int main(int argc, char *argv[])
     }
 
     /* Each process computes the best solution */
-    compute_best_solution(tc_params[tc], X_local, np_local, best_solution_local,
-                          &best_val_local);
+    if (compute_best_solution(tc_params[tc], X_local, np_local,
+                              best_solution_local, &best_val_local) == -1) {
+        printf("(%d): compute_best_solution error (memory allocation error)\n",
+               rank);
+        MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
+    }
 
     /* Last position is the best value of the OF found (min/max) */
     best_solution_local[tc_params[tc].nd] = best_val_local;
@@ -241,7 +245,8 @@ int main(int argc, char *argv[])
 
         printf("Best solution found:");
         print_vector(rank, best_solutions[best_val_idx], tc_params[tc].nd);
-        printf("OF value: %9.6f\n", best_solutions[best_val_idx][tc_params[tc].nd]);
+        printf("OF value: %9.6f\n",
+               best_solutions[best_val_idx][tc_params[tc].nd]);
     }
 
     /* Stop the timer (get the total elapsed time) */

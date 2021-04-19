@@ -54,8 +54,8 @@ void free_3d_matrix(num_t ****M, int m, int n);
 void init_positions(num_t **X, int np, int nd, num_t low, num_t high);
 int gradient(num_t (*f)(num_t *, int), num_t *X, int nd, num_t *result);
 int min_abs(num_t a, num_t b);
-void compute_best_solution(struct tc_params_s tc_params, num_t **X, int np,
-                           num_t *best_solution, num_t *best_val);
+int compute_best_solution(struct tc_params_s tc_params, num_t **X, int np,
+                          num_t *best_solution, num_t *best_val);
 
 /* Objective functions */
 num_t elliptic_paraboloid(num_t *X, int nd);
