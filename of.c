@@ -92,5 +92,32 @@ num_t rastrigin(num_t *X, int nd)
         val += X[i] * X[i] - 10 * cos(2 * M_PI * X[i]);
     }
 
-    return 10*nd + val;
+    return 10 * nd + val;
+}
+
+/*
+ * Griewangk function
+ *
+ * Input parameters
+ * - X:  input variables (decision variables) vector
+ * - nd:  number of decision variables
+ *
+ * Return value
+ * Function value at a given point
+ */
+num_t griewangk(num_t *X, int nd)
+{
+    int i;
+    num_t a = 0.0;
+    num_t b = 1.0;
+
+    for (i = 0; i < nd; i++) {
+        a += (X[i] * X[i]) / (num_t)4000;
+    }
+
+    for (i = 0; i < nd; i++) {
+        b *= cos(X[i] / sqrt((double)i+1));
+    }
+
+    return a - b + 1;
 }

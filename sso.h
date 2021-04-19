@@ -12,7 +12,7 @@
 #define NUM_DT MPI_DOUBLE
 
 /* Number of available test cases */
-#define NUM_OF_TC 5
+#define NUM_OF_TC 6
 
 /* Minimization or maximization of the objective function */
 #define MIN_GOAL -1
@@ -62,5 +62,6 @@ num_t elliptic_paraboloid(num_t *X, int nd);
 num_t goldstein_price(num_t *X, int nd);
 num_t flipped_goldstein_price(num_t *X, int nd);
 num_t rastrigin(num_t *X, int nd);
+num_t griewangk(num_t *X, int nd);
 
 #endif /* SSO_H */

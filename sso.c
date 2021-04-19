@@ -225,8 +225,8 @@ int main(int argc, char *argv[])
 
     /* Find the best solution among all processes solutions */
     if (rank == 0) {
-        // printf("Final solutions from all processes:\n");
-        // print_matrix(0, best_solutions, size, tc_params[tc].nd + 1);
+        printf("Final solutions from all processes (OF value in last column):\n");
+        print_matrix(0, best_solutions, size, tc_params[tc].nd + 1);
 
         best_val_idx = 0;
         best_val = best_solutions[best_val_idx][tc_params[tc].nd];
@@ -284,7 +284,8 @@ void print_usage(char *name)
     printf("0) Elliptic Paraboloid\n");
     printf("1) Goldstein-Price function\n");
     printf("2) \"Flipped\" Goldstein-Price function\n");
-    printf("3) Rastrigin function (two variables)\n");
-    printf("4) Rastrigin function (five variables)\n\n");
+    printf("3) Rastrigin function (two decision variables)\n");
+    printf("4) Rastrigin function (five decision variables)\n");
+    printf("5) Griewangk function (two decision variables)\n\n");
     fflush(stdout);
 }
