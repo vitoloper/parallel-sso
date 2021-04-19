@@ -1,4 +1,8 @@
-/* Objective functions definitions */
+/*
+ * Objective functions.
+ *
+ * (C) 2021 Giuseppe Vitolo
+ */
 
 #include <math.h>
 
@@ -7,8 +11,12 @@
 /*
  * Elliptic paraboloid function
  *
- * X:  array of decision variables
- * nd:  number of decision variables
+ * Input parameters
+ * - X:  input variables (decision variables) vector
+ * - nd:  number of decision variables
+ *
+ * Return value
+ * Function value at a given point
  */
 num_t elliptic_paraboloid(num_t *X, int nd)
 {
@@ -18,8 +26,12 @@ num_t elliptic_paraboloid(num_t *X, int nd)
 /*
  * Goldstein-Price function
  *
- * X:  array of decision variables
- * nd:  number of decision variables
+ * Input parameters
+ * - X:  input variables (decision variables) vector
+ * - nd:  number of decision variables
+ *
+ * Return value
+ * Function value at a given point
  */
 num_t goldstein_price(num_t *X, int nd)
 {
@@ -38,6 +50,13 @@ num_t goldstein_price(num_t *X, int nd)
 
 /*
  * "Flipped" Golstein-Price function
+ *
+ * Input parameters
+ * - X:  input variables (decision variables) vector
+ * - nd:  number of decision variables
+ *
+ * Return value
+ * Function value at a given point
  */
 num_t flipped_goldstein_price(num_t *X, int nd)
 {
@@ -54,7 +73,16 @@ num_t flipped_goldstein_price(num_t *X, int nd)
     return -1 * a * b;
 }
 
-/* Rastrigin function */
+/*
+ * Rastrigin function
+ *
+ * Input parameters
+ * - X:  input variables (decision variables) vector
+ * - nd:  number of decision variables
+ *
+ * Return value
+ * Function value at a given point
+ */
 num_t rastrigin(num_t *X, int nd)
 {
     // int i;

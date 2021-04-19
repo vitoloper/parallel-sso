@@ -6,7 +6,9 @@
  * Check for memory leaks with valgrind:
  * valgrind --leak-check=yes ./test_compute_best_solution
  *
+ * (C) 2021 Giuseppe Vitolo
  */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>

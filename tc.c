@@ -1,6 +1,18 @@
+/*
+ * Test cases parameters initialization.
+ *
+ * (C) 2021 Giuseppe Vitolo
+ */
+
 #include "sso.h"
 
-/* Initialize test case parameters array */
+/*
+ * This function initialized the test cases array with the appropriate
+ * parameters.
+ * 
+ * Output parameters
+ * - tc_params: test cases array
+ */
 void init_tc_params(struct tc_params_s *tc_params)
 {
     /* Elliptic paraboloid */
@@ -45,7 +57,7 @@ void init_tc_params(struct tc_params_s *tc_params)
     tc_params[2].k_max = 30;
     tc_params[2].initial_velocity = 0.5;
 
-    /* Rastrigin function */
+    /* Rastrigin function (two decision variables) */
     tc_params[3].nd = 2;
     tc_params[3].low = -20;
     tc_params[3].high = 20;

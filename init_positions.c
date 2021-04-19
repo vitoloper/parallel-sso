@@ -1,9 +1,26 @@
+/*
+ * Initial solution vectors generation.
+ *
+ * (C) 2021 Giuseppe Vitolo
+ */
+
 #include <stdlib.h>
 
 #include "sso.h"
 
-/* Initialize position vectors with values randomly sampled from the [low, high]
- * interval */
+/*
+ * This function initializes the NP solution vectors with values randomly
+ * sampled from a [low, high] interval.
+ *
+ * Input parameters
+ * - np: population size
+ * - nd: number of decision variables
+ * - low: lowest sampled value
+ * - high: highest sampled value
+ *
+ * Output parameters
+ * - X: initial solution matrix (dimensions: np * nd)
+ */
 void init_positions(num_t **X, int np, int nd, num_t low, num_t high)
 {
     int i, j;

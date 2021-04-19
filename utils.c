@@ -1,3 +1,9 @@
+/*
+ * Utility functions.
+ *
+ * (C) 2021 Giuseppe Vitolo
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,7 +11,15 @@
 
 #include "sso.h"
 
-/* Print an m*n matrix where each element is of num_t type */
+/*
+ * This function prints an m*n matrix where each element is of num_t type.
+ *
+ * Input parameters
+ * - rank: process rank
+ * - matrix: the matrix to display
+ * - m: number of rows
+ * - n: number of columns
+ */
 void print_matrix(int rank, num_t **matrix, int m, int n)
 {
     int i, j;
@@ -18,7 +32,14 @@ void print_matrix(int rank, num_t **matrix, int m, int n)
     }
 }
 
-/* Print a vector of length 'length' */
+/*
+ * This function prints a vector of length 'length'.
+ *
+ * Input parameters
+ * - rank: process rank
+ * - v: the vector to display
+ * - length: vector length
+ */
 void print_vector(int rank, num_t *v, int length)
 {
     int i;
@@ -29,7 +50,21 @@ void print_vector(int rank, num_t *v, int length)
     printf("\n");
 }
 
-/* Allocate matrix using a storage for memory contiguity */
+/*
+ * This function allocates contiguous memory space for a matrix.
+ *
+ * Input parameters
+ * - m: number of rows
+ * - n: number of columns
+ *
+ * Output parameters
+ * - M: matrix
+ * - M_storage: memory storage space
+ *
+ * Return value
+ * It returns -1 if a memory allocation problem occurred.
+ * It returns 1 on success.
+ */
 int allocate_cont_matrix(num_t ***M, num_t **M_storage, int m, int n)
 {
     int i;
@@ -54,7 +89,20 @@ int allocate_cont_matrix(num_t ***M, num_t **M_storage, int m, int n)
     return 1;
 }
 
-/* Allocate 2d matrix */
+/*
+ * This function allocates memory space for a 2d matrix.
+ *
+ * Input parameters
+ * - m: number of rows
+ * - n: number of columns
+ *
+ * Output parameters
+ * - M: matrix
+ *
+ * Return value
+ * It returns -1 if a memory allocation problem occurred.
+ * It returns 1 on success.
+ */
 int allocate_2d_matrix(num_t ***M, int m, int n)
 {
     int i;
@@ -74,7 +122,13 @@ int allocate_2d_matrix(num_t ***M, int m, int n)
     return 1;
 }
 
-/* Free 2d matrix */
+/*
+ * This function frees space allocated for a 2d matrix.
+ *
+ * Input parameters
+ *  - M: matrix that is freed
+ *  - m: number of rows
+ */
 void free_2d_matrix(num_t ***M, int m)
 {
     int i;
@@ -86,7 +140,21 @@ void free_2d_matrix(num_t ***M, int m)
     free(*M);
 }
 
-/* Allocate 3d matrix */
+/*
+ * This function allocates memory space for a 3d matrix.
+ *
+ * Input parameters
+ * - m: first dimension
+ * - n: second dimension
+ * - p: third dimension
+ *
+ * Output parameters
+ * - M: matrix
+ *
+ * Return value
+ * It returns -1 if a memory allocation problem occurred.
+ * It returns 1 on success.
+ */
 int allocate_3d_matrix(num_t ****M, int m, int n, int p)
 {
     int i, j;
@@ -112,7 +180,14 @@ int allocate_3d_matrix(num_t ****M, int m, int n, int p)
     return 1;
 }
 
-/* Free 3d matrix */
+/*
+ * This function frees space allocated for a 3d matrix.
+ *
+ * Input parameters
+ * - M: matrix that is freed
+ * - m: first dimension
+ * - p:  second dimension
+ */
 void free_3d_matrix(num_t ****M, int m, int n)
 {
     int i, j;
@@ -128,19 +203,27 @@ void free_3d_matrix(num_t ****M, int m, int n)
 }
 
 /*
- * Compute numerical gradient using central difference approximation.
+ * This function computes the numerical gradient of a function at a given point
+ * using central difference approximation.
  *
- * f: function pointer
- * X: parameter array
- * nd: number of decision variables
- * result [OUT]: result vector of length nd
+ * Input parameters
+ * - f: function
+ * - X: input variables (decision variables) vector
+ * - nd: number of decision variables
+ *
+ * Output parameters
+ * -result: computed gradient
+ *
+ * Return value
+ * It returns -1 if a memory allocation error occurred.
+ * It retuns 1 on success.
  */
 int gradient(num_t (*f)(num_t *, int), num_t *X, int nd, num_t *result)
 {
     int i;
-    num_t *current_X_right;
-    num_t *current_X_left;
-    num_t h = 0.0001;
+    num_t *current_X_right; /* x + h*/
+    num_t *current_X_left;  /* x - h*/
+    num_t h = 0.0001;       /* Step size */
 
     /* Allocate current_X_right */
     current_X_right = (num_t *)malloc(nd * sizeof(num_t));
@@ -172,8 +255,17 @@ int gradient(num_t (*f)(num_t *, int), num_t *X, int nd, num_t *result)
     return 1;
 }
 
-/* Given two values, return 0 if the first number has a lower abs value. Return
- * 1 otherwise. */
+/*
+ * This function returns 0 if a is lower than b (absolute value comparison).
+ *
+ * Input parameters
+ * - a: number
+ * - b: number
+ * 
+ * Return value
+ * It returns 0 if |a| < |b|.
+ * It returns 1 otherwise.
+ */
 int min_abs(num_t a, num_t b)
 {
     if (fabs((double)a) < fabs((double)b)) {
