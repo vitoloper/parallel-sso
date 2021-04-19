@@ -21,6 +21,7 @@ int main(int argc, char *argv[])
     int np_local;           /* population size (local) */
     int tc;                 /* test case to run */
     int i;                  /* loop control variable */
+    int best_val_idx;       /* best value index in best_solutions matrix */
     num_t **X;              /* position (solution) vectors (np*nd matrix) */
     num_t *X_storage;       /* storage for X values (contiguous memory) */
     num_t **X_local;        /* subset of position vectors (local) */
@@ -29,15 +30,17 @@ int main(int argc, char *argv[])
     // num_t *X_gathered_storage; /* storage for X_gathered values (contiguous)
     // */
     num_t *best_solution_local;              /* best local solution vector */
-    num_t best_val_local;                    /* best min/max OF value */
+    num_t best_val_local;                    /* best min/max OF value (local) */
+    num_t best_val;                          /* best min/max OF value */
     num_t **best_solutions;                  /* best solutions ( #procs * nd) */
     num_t *best_solutions_storage;           /* storage for best_solutions */
     struct tc_params_s tc_params[NUM_OF_TC]; /* Test cases parameters array */
     char *endptr; /* location of the first invalid char (strtol) */
     int *counts;  /* number of elements to send/recv to/from each proc */
     int *displs;  /* array of displacements relative to X_storage */
-    MPI_Datatype row_type; /* row datatype */
-    double elapsed_time;   /* elapsed time */
+    MPI_Datatype row_type;        /* row datatype */
+    MPI_Datatype row_result_type; /* row plus one element datatype */
+    double elapsed_time;          /* elapsed time */
 
     MPI_Init(&argc, &argv);
 
@@ -129,9 +132,10 @@ int main(int argc, char *argv[])
 
     } /* end if (rank == 0) */
 
-    /* Allocate best solutions matrix (#procs * nd) */
+    /* Allocate best solutions matrix (#procs * (nd + 1)) */
+    /* Note: (nd+1) because last position holds the min/max OF value */
     if (allocate_cont_matrix(&best_solutions, &best_solutions_storage, size,
-                             tc_params[tc].nd) == -1) {
+                             tc_params[tc].nd + 1) == -1) {
         printf(
             "(0): matrix allocation error (best_solutions, "
             "best_solutions_storage)\n");
@@ -174,9 +178,11 @@ int main(int argc, char *argv[])
         MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
     }
 
-    /* Initialize row datatype */
+    /* Initialize datatypes */
     MPI_Type_contiguous(tc_params[tc].nd, NUM_DT, &row_type);
     MPI_Type_commit(&row_type);
+    MPI_Type_contiguous(tc_params[tc].nd + 1, NUM_DT, &row_result_type);
+    MPI_Type_commit(&row_result_type);
 
     /* Scatter initial solutions */
     MPI_Scatterv(X_storage, counts, displs, row_type, X_local_storage, np_local,
@@ -186,7 +192,8 @@ int main(int argc, char *argv[])
     print_matrix(rank, X_local, np_local, tc_params[tc].nd);
 
     /* Allocate best_solution_local */
-    best_solution_local = (num_t *)malloc(tc_params[tc].nd * sizeof(num_t));
+    best_solution_local =
+        (num_t *)malloc((tc_params[tc].nd + 1) * sizeof(num_t));
     if (best_solution_local == NULL) {
         printf("(%d): vector allocation error (best_solution_local)\n", rank);
         MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
@@ -196,11 +203,14 @@ int main(int argc, char *argv[])
     compute_best_solution(tc_params[tc], X_local, np_local, best_solution_local,
                           &best_val_local);
 
+    /* Last position is the best value of the OF found (min/max) */
+    best_solution_local[tc_params[tc].nd] = best_val_local;
     printf("Local solution vector\n");
-    print_vector(rank, best_solution_local, tc_params[tc].nd);
+    print_vector(rank, best_solution_local, tc_params[tc].nd + 1);
 
     /* counts[i]: how many rows to send/recv to/from process i */
     /* displs[i]: where send/recv to/from process i should start */
+    /* These values are significant only at root process */
     for (i = 0; i < size; i++) {
         counts[i] = 1;
         displs[i] = i;
@@ -209,14 +219,29 @@ int main(int argc, char *argv[])
         // printf("displs: %d\n", displs[i]);
     }
 
-    MPI_Gatherv(best_solution_local, tc_params[tc].nd, NUM_DT,
-                best_solutions_storage, counts, displs, row_type, 0,
+    /* Gather results from all processes */
+    MPI_Gatherv(best_solution_local, tc_params[tc].nd + 1, NUM_DT,
+                best_solutions_storage, counts, displs, row_result_type, 0,
                 MPI_COMM_WORLD);
 
-    /* TODO: proc 0: Find the best solution among all the process solutions */
+    /* Find the best solution among all processes solutions */
     if (rank == 0) {
         printf("Final solutions from all processes:\n");
-        print_matrix(0, best_solutions, size, tc_params[tc].nd);
+        print_matrix(0, best_solutions, size, tc_params[tc].nd + 1);
+
+        best_val_idx = 0;
+        best_val = best_solutions[best_val_idx][tc_params[tc].nd];
+        for (int i = 1; i < size; i++) {
+            if (tc_params[tc].goal * best_solutions[i][tc_params[tc].nd] >
+                tc_params[tc].goal * best_val) {
+                best_val_idx = i;
+                best_val = best_solutions[i][tc_params[tc].nd];
+            }
+        }
+
+        printf("Best solution found:");
+        print_vector(rank, best_solutions[best_val_idx], tc_params[tc].nd);
+        printf("OF value: %9.6f\n", best_solutions[best_val_idx][tc_params[tc].nd]);
     }
 
     /* Stop the timer (get the total elapsed time) */
@@ -225,6 +250,7 @@ int main(int argc, char *argv[])
 
     /* Free the datatype */
     MPI_Type_free(&row_type);
+    MPI_Type_free(&row_result_type);
 
     /* Free heap space */
     free(X_local);
@@ -236,9 +262,6 @@ int main(int argc, char *argv[])
     free(displs);
 
     if (rank == 0) {
-        /* Print final solution vectors */
-        // TODO
-
         printf("(0): Total elapsed time (seconds): %8.6f\n", elapsed_time);
         fflush(stdout);
 
