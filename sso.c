@@ -282,6 +282,8 @@ void print_usage(char *name)
     printf("TC: test case\n\n");
     printf("TC is a number which can assume the following values:\n");
     printf("0) Elliptic Paraboloid\n");
-    // printf("1) Rastrigin Benchmark Function\n\n");
+    printf("1) Goldstein-Price function\n");
+    printf("2) \"Flipped\" Goldstein-Price function\n");
+    printf("3) Rastrigin function (two variables)\n\n");
     fflush(stdout);
 }
