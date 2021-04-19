@@ -284,6 +284,7 @@ void print_usage(char *name)
     printf("0) Elliptic Paraboloid\n");
     printf("1) Goldstein-Price function\n");
     printf("2) \"Flipped\" Goldstein-Price function\n");
-    printf("3) Rastrigin function (two variables)\n\n");
+    printf("3) Rastrigin function (two variables)\n");
+    printf("4) Rastrigin function (five variables)\n\n");
     fflush(stdout);
 }

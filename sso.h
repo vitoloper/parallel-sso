@@ -12,7 +12,7 @@
 #define NUM_DT MPI_DOUBLE
 
 /* Number of available test cases */
-#define NUM_OF_TC 4
+#define NUM_OF_TC 5
 
 /* Minimization or maximization of the objective function */
 #define MIN_GOAL -1

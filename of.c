@@ -85,13 +85,12 @@ num_t flipped_goldstein_price(num_t *X, int nd)
  */
 num_t rastrigin(num_t *X, int nd)
 {
-    // int i;
-    // num_t val = 0;
+    int i;
+    num_t val = 0;
 
-    /* for (i = 0; i < nd; i++) {
-        val += X[i] * X[i] - 10 * cos((double)2 * M_PI * X[i]);
-    } */
+    for (i = 0; i < nd; i++) {
+        val += X[i] * X[i] - 10 * cos(2 * M_PI * X[i]);
+    }
 
-    return 20 + (X[0] * X[0] - 10 * cos(2 * M_PI * X[0])) +
-           (X[1] * X[1] - 10 * cos(2 * M_PI * X[1]));
+    return 10*nd + val;
 }

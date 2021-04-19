@@ -70,4 +70,18 @@ void init_tc_params(struct tc_params_s *tc_params)
     tc_params[3].m_points = 20;
     tc_params[3].k_max = 30;
     tc_params[3].initial_velocity = 0.5;
+
+    /* Rastrigin function (five decision variables) */
+    tc_params[4].nd = 5;
+    tc_params[4].low = -20;
+    tc_params[4].high = 20;
+    tc_params[4].goal = MIN_GOAL;
+    tc_params[4].obj_func = rastrigin;
+    tc_params[4].eta = 0.09;
+    tc_params[4].alpha = 0.1;
+    tc_params[4].beta = 4;
+    tc_params[4].delta_t = 1;
+    tc_params[4].m_points = 20;
+    tc_params[4].k_max = 30;
+    tc_params[4].initial_velocity = 0.5;
 }
