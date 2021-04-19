@@ -98,4 +98,18 @@ void init_tc_params(struct tc_params_s *tc_params)
     tc_params[5].m_points = 20;
     tc_params[5].k_max = 30;
     tc_params[5].initial_velocity = 0.5;
+
+    /* Griewangk function (five decision variables) */
+    tc_params[6].nd = 5;
+    tc_params[6].low = -600;
+    tc_params[6].high = 600;
+    tc_params[6].goal = MIN_GOAL;
+    tc_params[6].obj_func = griewangk;
+    tc_params[6].eta = 0.9;
+    tc_params[6].alpha = 0.1;
+    tc_params[6].beta = 4;
+    tc_params[6].delta_t = 1;
+    tc_params[6].m_points = 20;
+    tc_params[6].k_max = 30;
+    tc_params[6].initial_velocity = 0.5;
 }

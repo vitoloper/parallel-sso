@@ -1,3 +1,8 @@
+/*
+ * Parallel SSO application header.
+ *
+ * (C) 2021 Giuseppe Vitolo
+ */
 #ifndef SSO_H
 #define SSO_H
 
@@ -12,7 +17,7 @@
 #define NUM_DT MPI_DOUBLE
 
 /* Number of available test cases */
-#define NUM_OF_TC 6
+#define NUM_OF_TC 7
 
 /* Minimization or maximization of the objective function */
 #define MIN_GOAL -1

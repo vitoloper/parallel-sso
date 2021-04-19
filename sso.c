@@ -286,6 +286,7 @@ void print_usage(char *name)
     printf("2) \"Flipped\" Goldstein-Price function\n");
     printf("3) Rastrigin function (two decision variables)\n");
     printf("4) Rastrigin function (five decision variables)\n");
-    printf("5) Griewangk function (two decision variables)\n\n");
+    printf("5) Griewangk function (two decision variables)\n");
+    printf("6) Griewangk function (five decision variables)\n\n");
     fflush(stdout);
 }
