@@ -1,7 +1,7 @@
 /*
- * Parallel Shark Smell Optimization algorithm implementation
- * Author: Giuseppe Vitolo
+ * Parallel Shark Smell Optimization algorithm implementation.
  *
+ * (C) 2021 Giuseppe Vitolo
  */
 
 #include "sso.h"
@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
                        tc_params[tc].high);
 
         /* Print initial solution vectors */
-        print_matrix(rank, X, np, tc_params[tc].nd);
+        // print_matrix(rank, X, np, tc_params[tc].nd);
 
     } /* end if (rank == 0) */
 
@@ -163,8 +163,6 @@ int main(int argc, char *argv[])
     for (i = 0; i < size; i++) {
         counts[i] = BLOCK_SIZE(i, size, np);
         displs[i] = BLOCK_LOW(i, size, np);
-        // printf("counts: %d\n", counts[i]);
-        // printf("displs: %d\n", displs[i]);
     }
 
     /* Number of local solutions (local population size) */
@@ -189,7 +187,7 @@ int main(int argc, char *argv[])
                  row_type, 0, MPI_COMM_WORLD);
 
     /* Print local initial solutions */
-    print_matrix(rank, X_local, np_local, tc_params[tc].nd);
+    // print_matrix(rank, X_local, np_local, tc_params[tc].nd);
 
     /* Allocate best_solution_local */
     best_solution_local =
@@ -209,8 +207,8 @@ int main(int argc, char *argv[])
 
     /* Last position is the best value of the OF found (min/max) */
     best_solution_local[tc_params[tc].nd] = best_val_local;
-    printf("Local solution vector\n");
-    print_vector(rank, best_solution_local, tc_params[tc].nd + 1);
+    // printf("Local solution vector\n");
+    // print_vector(rank, best_solution_local, tc_params[tc].nd + 1);
 
     /* counts[i]: how many rows to send/recv to/from process i */
     /* displs[i]: where send/recv to/from process i should start */
@@ -218,9 +216,6 @@ int main(int argc, char *argv[])
     for (i = 0; i < size; i++) {
         counts[i] = 1;
         displs[i] = i;
-
-        // printf("counts: %d\n", counts[i]);
-        // printf("displs: %d\n", displs[i]);
     }
 
     /* Gather results from all processes */
@@ -230,8 +225,8 @@ int main(int argc, char *argv[])
 
     /* Find the best solution among all processes solutions */
     if (rank == 0) {
-        printf("Final solutions from all processes:\n");
-        print_matrix(0, best_solutions, size, tc_params[tc].nd + 1);
+        // printf("Final solutions from all processes:\n");
+        // print_matrix(0, best_solutions, size, tc_params[tc].nd + 1);
 
         best_val_idx = 0;
         best_val = best_solutions[best_val_idx][tc_params[tc].nd];
@@ -243,9 +238,9 @@ int main(int argc, char *argv[])
             }
         }
 
-        printf("Best solution found:");
+        printf("Best solution found: ");
         print_vector(rank, best_solutions[best_val_idx], tc_params[tc].nd);
-        printf("OF value: %9.6f\n",
+        printf("Objective function value: %9.6f\n",
                best_solutions[best_val_idx][tc_params[tc].nd]);
     }
 
@@ -267,7 +262,7 @@ int main(int argc, char *argv[])
     free(displs);
 
     if (rank == 0) {
-        printf("(0): Total elapsed time (seconds): %8.6f\n", elapsed_time);
+        printf("Total elapsed time (seconds): %8.6f\n", elapsed_time);
         fflush(stdout);
 
         /* Free heap space */
