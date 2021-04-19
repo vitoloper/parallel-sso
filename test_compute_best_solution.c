@@ -16,7 +16,7 @@
 int main()
 {
     num_t **X;
-    int np = 20;
+    int np = 10;
     int nd = 2;
     num_t *best_solution;
     num_t best_val;
@@ -63,17 +63,10 @@ int main()
 
     /* Minimization of Rastrigin function */
     printf("Minimization of Rastrigin function (two decision variables)\n");
-    
     init_positions(X, np, tc_params[3].nd, tc_params[3].low, tc_params[3].high);
-    printf("Initial positions:\n");
-    // X[0][0] = 2;
-    // X[0][1] = 2;
-    print_matrix(0, X, np, nd);
-
-    // printf("Initial OF value: %9.6f\n", rastrigin(X[0], 2));
-
+    // printf("Initial positions:\n");
+    // print_matrix(0, X, np, nd);
     compute_best_solution(tc_params[3], X, np, best_solution, &best_val);
-
     printf("\nBest solution: [%f, %f]\n", best_solution[0], best_solution[1]);
     printf("Minimum value: %f\n\n", best_val);
 
