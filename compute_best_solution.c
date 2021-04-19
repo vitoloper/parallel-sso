@@ -64,16 +64,14 @@ void compute_best_solution(struct tc_params_s tc_params, num_t **X, int np,
     for (k = 0; k < tc_params.k_max; k++) {
         R1 = (num_t)rand() / RAND_MAX; /* [0,1] */
         R2 = (num_t)rand() / RAND_MAX; /* [0,1] */
-        R1 = 0.98765;
-        R2 = 0.56789;
 
         /* Each row is a solution of nd decision variables */
         for (i = 0; i < np; i++) {
             /* Compute gradient */
             // print_vector(0, X[i], nd);
             gradient(tc_params.obj_func, X[i], tc_params.nd, gradient_result);
-            printf("k = %d, NP = %d  ", k, i);
-            print_vector(0, gradient_result, tc_params.nd);
+            // printf("k = %d, NP = %d  ", k, i);
+            // print_vector(0, gradient_result, tc_params.nd);
 
             /* Compute velocities */
             for (j = 0; j < tc_params.nd; j++) {
@@ -82,6 +80,7 @@ void compute_best_solution(struct tc_params_s tc_params, num_t **X, int np,
 
                 vel_limit = tc_params.beta * V[i][j];
                 vel_limit_idx = min_abs(vel, vel_limit);
+
                 /* Choose the velocity with the smallest abs value */
                 if (vel_limit_idx == 0) {
                     V[i][j] = vel;
@@ -93,17 +92,16 @@ void compute_best_solution(struct tc_params_s tc_params, num_t **X, int np,
                 Y[i][j] = X[i][j] + V[i][j] * tc_params.delta_t;
             }
 
-            printf("velocities = ");
-            print_vector(0, V[i], tc_params.nd);
-            printf("forward position = ");
-            print_vector(0, Y[i], tc_params.nd);
+            // printf("velocities = ");
+            // print_vector(0, V[i], tc_params.nd);
+            // printf("forward position = ");
+            // print_vector(0, Y[i], tc_params.nd);
 
             /* Set next rotational movement positions (local search) */
             for (m = 0; m < tc_params.m_points; m++) {
                 R3 = (num_t)rand() / RAND_MAX; /* [0,1] */
                 R3 = 2 * R3;                   /* [0,2] */
                 R3 = R3 - 1;                   /* [-1,1] */
-                R3 = 0.887766;
 
                 for (j = 0; j < tc_params.nd; j++) {
                     Z[i][m][j] = Y[i][j] + R3 * Y[i][j];
@@ -124,7 +122,7 @@ void compute_best_solution(struct tc_params_s tc_params, num_t **X, int np,
                     best_OF_vals[i] = tc_params.obj_func(Z[i][m], tc_params.nd);
                 }
             }
-            printf("\n");
+            // printf("\n");
         } /* end NP loop */
 
         // printf("Velocities:\n");
@@ -132,12 +130,13 @@ void compute_best_solution(struct tc_params_s tc_params, num_t **X, int np,
         // print_vector(0, best_OF_vals, np);
     } /* end K_MAX loop */
 
-    /* Choose the best solution among the NP solutions */
-    printf("Final solution vectors:\n");
-    print_matrix(0, X, np, tc_params.nd);
+    // printf("Final solution vectors:\n");
+    // print_matrix(0, X, np, tc_params.nd);
 
+    /* Choose the best solution among the NP solutions */
     memcpy(best_solution, X[0], tc_params.nd * sizeof(num_t));
     *best_val = tc_params.obj_func(best_solution, tc_params.nd);
+
     for (i = 1; i < np; i++) {
         if (tc_params.goal * tc_params.obj_func(X[1], tc_params.nd) >
             tc_params.goal * (*best_val)) {

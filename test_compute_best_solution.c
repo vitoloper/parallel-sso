@@ -1,6 +1,7 @@
 /* Application used to test the compute_best_solution function
  * Compile with:
- * mpicc -Wall -g -lm test_compute_best_solution.c compute_best_solution.c init_positions.c of.c tc.c utils.c -o test_compute_best_solution
+ * mpicc -Wall -g -lm test_compute_best_solution.c compute_best_solution.c
+ * init_positions.c of.c tc.c utils.c -o test_compute_best_solution
  *
  * Check for memory leaks with valgrind:
  * valgrind --leak-check=yes ./test_compute_best_solution
@@ -38,8 +39,7 @@ int main()
     init_positions(X, np, tc_params[0].nd, tc_params[0].low, tc_params[0].high);
     // printf("Initial positions:\n");
     // print_matrix(0, X, np, nd);
-    compute_best_solution(tc_params[0], X, np,
-                          best_solution, &best_val);
+    compute_best_solution(tc_params[0], X, np, best_solution, &best_val);
     printf("Best solution: [%f, %f]\n", best_solution[0], best_solution[1]);
     printf("Minimum value: %f\n\n", best_val);
 
@@ -48,8 +48,7 @@ int main()
     init_positions(X, np, tc_params[1].nd, tc_params[1].low, tc_params[1].high);
     // printf("Initial positions:\n");
     // print_matrix(0, X, np, nd);
-    compute_best_solution(tc_params[1], X, np,
-                          best_solution, &best_val);
+    compute_best_solution(tc_params[1], X, np, best_solution, &best_val);
     printf("Best solution: [%f, %f]\n", best_solution[0], best_solution[1]);
     printf("Minimum value: %f\n\n", best_val);
 
@@ -58,24 +57,25 @@ int main()
     init_positions(X, np, tc_params[2].nd, tc_params[2].low, tc_params[2].high);
     // printf("Initial positions:\n");
     // print_matrix(0, X, np, nd);
-    compute_best_solution(tc_params[2], X, np,
-                          best_solution, &best_val);
+    compute_best_solution(tc_params[2], X, np, best_solution, &best_val);
     printf("Best solution: [%f, %f]\n", best_solution[0], best_solution[1]);
     printf("Maximum value: %f\n\n", best_val);
 
     /* Minimization of Rastrigin function */
     printf("Minimization of Rastrigin function (two decision variables)\n");
+    
     init_positions(X, np, tc_params[3].nd, tc_params[3].low, tc_params[3].high);
     printf("Initial positions:\n");
+    // X[0][0] = 2;
+    // X[0][1] = 2;
     print_matrix(0, X, np, nd);
-    compute_best_solution(tc_params[3], X, np,
-                          best_solution, &best_val);
+
+    // printf("Initial OF value: %9.6f\n", rastrigin(X[0], 2));
+
+    compute_best_solution(tc_params[3], X, np, best_solution, &best_val);
+
     printf("\nBest solution: [%f, %f]\n", best_solution[0], best_solution[1]);
     printf("Minimum value: %f\n\n", best_val);
-
-    best_solution[0] = 0;
-    best_solution[1] = 0;
-    printf("Rastrigin at [0,0]: %f\n", rastrigin(best_solution, 2));
 
     /* Free heap space */
     free(best_solution);
