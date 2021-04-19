@@ -28,6 +28,10 @@ int main(int argc, char *argv[])
     // num_t **X_gathered;        /* solutions gathered from processes */
     // num_t *X_gathered_storage; /* storage for X_gathered values (contiguous)
     // */
+    num_t *best_solution_local;              /* best local solution vector */
+    num_t best_val_local;                    /* best min/max OF value */
+    num_t **best_solutions;                  /* best solutions ( #procs * nd) */
+    num_t *best_solutions_storage;           /* storage for best_solutions */
     struct tc_params_s tc_params[NUM_OF_TC]; /* Test cases parameters array */
     char *endptr; /* location of the first invalid char (strtol) */
     int *counts;  /* number of elements to send/recv to/from each proc */
@@ -123,35 +127,50 @@ int main(int argc, char *argv[])
         /* Print initial solution vectors */
         print_matrix(rank, X, np, tc_params[tc].nd);
 
-        /* Set counts and displs */
-        counts = (int *)malloc(size * sizeof(int));
-        if (counts == NULL) {
-            printf("(0): malloc error (sendcounts)\n");
-            fflush(stdout);
-            MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
-        }
-
-        displs = (int *)malloc(size * sizeof(int));
-        if (displs == NULL) {
-            printf("(0): malloc error (displs)\n");
-            fflush(stdout);
-            MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
-        }
-
-        /* counts[i]: how many rows to send/recv to/from process i */
-        /* displs[i]: where send/recv to/from process i should start */
-        for (i = 0; i < size; i++) {
-            counts[i] = BLOCK_SIZE(i, size, np);
-            displs[i] = BLOCK_LOW(i, size, np);
-        }
     } /* end if (rank == 0) */
+
+    /* Allocate best solutions matrix (#procs * nd) */
+    if (allocate_cont_matrix(&best_solutions, &best_solutions_storage, size,
+                             tc_params[tc].nd) == -1) {
+        printf(
+            "(0): matrix allocation error (best_solutions, "
+            "best_solutions_storage)\n");
+        fflush(stdout);
+        MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
+    }
+
+    /* Set counts and displs */
+    counts = (int *)malloc(size * sizeof(int));
+    if (counts == NULL) {
+        printf("(0): malloc error (sendcounts)\n");
+        fflush(stdout);
+        MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
+    }
+
+    displs = (int *)malloc(size * sizeof(int));
+    if (displs == NULL) {
+        printf("(0): malloc error (displs)\n");
+        fflush(stdout);
+        MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
+    }
+
+    /* counts[i]: how many rows to send/recv to/from process i */
+    /* displs[i]: where send/recv to/from process i should start */
+    for (i = 0; i < size; i++) {
+        counts[i] = BLOCK_SIZE(i, size, np);
+        displs[i] = BLOCK_LOW(i, size, np);
+        // printf("counts: %d\n", counts[i]);
+        // printf("displs: %d\n", displs[i]);
+    }
 
     /* Number of local solutions (local population size) */
     np_local = BLOCK_SIZE(rank, size, np);
 
     /* Allocate X_local and X_local_storage */
-    if(allocate_cont_matrix(&X_local, &X_local_storage, np_local, tc_params[tc].nd) == -1) {
-        printf("(%d): matrix allocation error (X_local, X_local_storage)\n", rank);
+    if (allocate_cont_matrix(&X_local, &X_local_storage, np_local,
+                             tc_params[tc].nd) == -1) {
+        printf("(%d): matrix allocation error (X_local, X_local_storage)\n",
+               rank);
         MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
     }
 
@@ -166,20 +185,39 @@ int main(int argc, char *argv[])
     /* Print local initial solutions */
     print_matrix(rank, X_local, np_local, tc_params[tc].nd);
 
-    /***********************************/
-    /* NOTE: add in tc_params if it's a min or max problem */
-    /* TODO: compute_movement(X_local, np_local, tc_params) */
-    /* TODO: mpi_Gatherv */
-    /* TODO: process 0 prints solutions */
-    /* TODO (maybe): process 0 prints OF min/max found */
-    /***********************************/
+    /* Allocate best_solution_local */
+    best_solution_local = (num_t *)malloc(tc_params[tc].nd * sizeof(num_t));
+    if (best_solution_local == NULL) {
+        printf("(%d): vector allocation error (best_solution_local)\n", rank);
+        MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
+    }
 
-    
+    /* Each process computes the best solution */
+    compute_best_solution(tc_params[tc], X_local, np_local, best_solution_local,
+                          &best_val_local);
 
-    /* Process 0: gather results from all processes */
-    /* TODO: Change. Gather just ONE solution (the best one) from each proc */
-    MPI_Gatherv(X_local_storage, np_local, row_type, X_storage, counts, displs,
-                row_type, 0, MPI_COMM_WORLD);
+    printf("Local solution vector\n");
+    print_vector(rank, best_solution_local, tc_params[tc].nd);
+
+    /* counts[i]: how many rows to send/recv to/from process i */
+    /* displs[i]: where send/recv to/from process i should start */
+    for (i = 0; i < size; i++) {
+        counts[i] = 1;
+        displs[i] = i;
+
+        // printf("counts: %d\n", counts[i]);
+        // printf("displs: %d\n", displs[i]);
+    }
+
+    MPI_Gatherv(best_solution_local, tc_params[tc].nd, NUM_DT,
+                best_solutions_storage, counts, displs, row_type, 0,
+                MPI_COMM_WORLD);
+
+    /* TODO: proc 0: Find the best solution among all the process solutions */
+    if (rank == 0) {
+        printf("Final solutions from all processes:\n");
+        print_matrix(0, best_solutions, size, tc_params[tc].nd);
+    }
 
     /* Stop the timer (get the total elapsed time) */
     MPI_Barrier(MPI_COMM_WORLD);
@@ -191,10 +229,15 @@ int main(int argc, char *argv[])
     /* Free heap space */
     free(X_local);
     free(X_local_storage);
+    free(best_solution_local);
+    free(best_solutions);
+    free(best_solutions_storage);
+    free(counts);
+    free(displs);
 
     if (rank == 0) {
         /* Print final solution vectors */
-        print_matrix(rank, X, np, tc_params[tc].nd);
+        // TODO
 
         printf("(0): Total elapsed time (seconds): %8.6f\n", elapsed_time);
         fflush(stdout);
@@ -202,8 +245,6 @@ int main(int argc, char *argv[])
         /* Free heap space */
         free(X);
         free(X_storage);
-        free(counts);
-        free(displs);
     }
 
     MPI_Finalize();
