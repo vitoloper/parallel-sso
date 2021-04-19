@@ -89,7 +89,10 @@ int compute_best_solution(struct tc_params_s tc_params, num_t **X, int np,
         /* Each row is a solution of nd decision variables */
         for (i = 0; i < np; i++) {
             /* Compute gradient */
-            gradient(tc_params.obj_func, X[i], tc_params.nd, gradient_result);
+            if (gradient(tc_params.obj_func, X[i], tc_params.nd,
+                         gradient_result) == -1) {
+                return -1;
+            }
 
             /* Compute velocities */
             for (j = 0; j < tc_params.nd; j++) {
