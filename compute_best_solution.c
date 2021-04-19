@@ -6,11 +6,6 @@
 
 #include "sso.h"
 
-/* TODO
- * - improve function by assigning OF values to variables
- * - improve final min/max search
- */
-
 /*
  * Movement of shark toward prey: evolution of the SSO algorithm.
  *
@@ -40,6 +35,7 @@ void compute_best_solution(struct tc_params_s tc_params, num_t **X, int np,
     num_t R3;
     num_t vel, vel_limit;
     int vel_limit_idx;
+    num_t current_OF_val;
 
     /* Allocate space (TODO: check result) */
     allocate_2d_matrix(&V, np, tc_params.nd);
@@ -116,10 +112,12 @@ void compute_best_solution(struct tc_params_s tc_params, num_t **X, int np,
             best_OF_vals[i] = tc_params.obj_func(Y[i], tc_params.nd);
 
             for (m = 0; m < tc_params.m_points; m++) {
-                if (tc_params.goal * tc_params.obj_func(Z[i][m], tc_params.nd) >
+                current_OF_val = tc_params.obj_func(Z[i][m], tc_params.nd);
+
+                if (tc_params.goal * current_OF_val >
                     tc_params.goal * best_OF_vals[i]) {
                     memcpy(X[i], Z[i][m], tc_params.nd * sizeof(num_t));
-                    best_OF_vals[i] = tc_params.obj_func(Z[i][m], tc_params.nd);
+                    best_OF_vals[i] = current_OF_val;
                 }
             }
             // printf("\n");
@@ -138,10 +136,11 @@ void compute_best_solution(struct tc_params_s tc_params, num_t **X, int np,
     *best_val = tc_params.obj_func(best_solution, tc_params.nd);
 
     for (i = 1; i < np; i++) {
-        if (tc_params.goal * tc_params.obj_func(X[1], tc_params.nd) >
-            tc_params.goal * (*best_val)) {
+        current_OF_val = tc_params.obj_func(X[i], tc_params.nd);
+
+        if (tc_params.goal * current_OF_val > tc_params.goal * (*best_val)) {
             memcpy(best_solution, X[i], tc_params.nd * sizeof(num_t));
-            *best_val = tc_params.obj_func(X[1], tc_params.nd);
+            *best_val = current_OF_val;
         }
     }
 
