@@ -28,7 +28,7 @@ void print_matrix(int rank, num_t **matrix, int m, int n)
         for (j = 0; j < n; j++) {
             printf("(%d) [%d,%d]: %9.6f ", rank, i, j, matrix[i][j]);
         }
-        printf("\n");
+        putchar('\n');
     }
 }
 
@@ -47,7 +47,7 @@ void print_vector(int rank, num_t *v, int length)
     for (i = 0; i < length; i++) {
         printf("(%d): %9.6f ", rank, v[i]);
     }
-    printf("\n");
+    putchar('\n');
 }
 
 /*
