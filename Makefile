@@ -2,7 +2,7 @@
 
 CC = mpicc
 OPT_CC = cc
-CFLAGS = -O3 -Wall
+CFLAGS = -O3 -Wall -g
 LDLIBS = -lm
 OBJFILES = utils.o init_positions.o of.o tc.o compute_best_solution.o reduce_ops.o sso.o
 TARGET = sso

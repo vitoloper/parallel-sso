@@ -154,7 +154,7 @@ int main(int argc, char *argv[])
     /* Print best solution and best objective function value (each process) */
     print_vector(rank, best_solution_local, tc_params[tc].nd + 1);
 
-    /* TODO: MPI_Reduce with custom operation */
+    /* Use MPI_Reduce to get the solution vector and the best OF value */
     if (tc_params[tc].goal == MIN_GOAL) {
         MPI_Reduce(best_solution_local, best_solution, 1, row_result_type,
                    custom_min_op, 0, MPI_COMM_WORLD);
@@ -167,6 +167,16 @@ int main(int argc, char *argv[])
     MPI_Barrier(MPI_COMM_WORLD);
     elapsed_time += MPI_Wtime();
 
+    /* Process 0: print result vector, OF value and total elapsed time */
+    if (rank == 0) {
+        printf("Final solution vector: ");
+        print_vector(0, best_solution, tc_params[tc].nd);
+        printf("Best objective function value: %f\n",
+               best_solution[tc_params[tc].nd]);
+        printf("Total elapsed time (seconds): %8.6f\n", elapsed_time);
+        fflush(stdout);
+    }
+
     /* Free datatype */
     MPI_Type_free(&row_result_type);
 
@@ -177,14 +187,7 @@ int main(int argc, char *argv[])
     /* Free heap space */
     free(best_solution_local);
     free_2d_matrix(&X_local, np_local);
-    /* Process 0: print result vector, OF value and total elapsed time */
-    if (rank == 0) {
-        printf("Final solution vector: ");
-        print_vector(0, best_solution, tc_params[tc].nd);
-        printf("Best objective function value: %f\n", best_solution[tc_params[tc].nd]);
-        printf("Total elapsed time (seconds): %8.6f\n", elapsed_time);
-        fflush(stdout);
-    }
+    free(best_solution);
 
     MPI_Finalize();
     return 0;

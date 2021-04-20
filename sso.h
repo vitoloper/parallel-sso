@@ -67,8 +67,10 @@ int compute_best_solution(struct tc_params_s tc_params, num_t **X, int np,
                           num_t *best_solution, num_t *best_val);
 
 /* Custom reduce operations */
-void find_max_val(void *a, void *b, int *len, MPI_Datatype *dt);
-void find_min_val(void *in_param, void *inout_param, int *len, MPI_Datatype *dt);
+void find_max_val(void *in_param, void *inout_param, int *len,
+                  MPI_Datatype *dt);
+void find_min_val(void *in_param, void *inout_param, int *len,
+                  MPI_Datatype *dt);
 
 /* Objective functions */
 num_t elliptic_paraboloid(num_t *X, int nd);
