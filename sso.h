@@ -13,6 +13,10 @@
 #define BLOCK_HIGH(id, p, n) (BLOCK_LOW((id) + 1, p, n) - 1)
 #define BLOCK_SIZE(id, p, n) (BLOCK_HIGH(id, p, n) - BLOCK_LOW(id, p, n) + 1)
 
+/* MAX/MIN macros */
+#define MAX(a, b) (((a) > (b)) ? (a) : (b))
+#define MIN(a, b) (((a) < (b)) ? (a) : (b))
+
 /* Basic MPI datatype to use */
 #define NUM_DT MPI_DOUBLE
 
@@ -61,6 +65,10 @@ int gradient(num_t (*f)(num_t *, int), num_t *X, int nd, num_t *result);
 int min_abs(num_t a, num_t b);
 int compute_best_solution(struct tc_params_s tc_params, num_t **X, int np,
                           num_t *best_solution, num_t *best_val);
+
+/* Custom reduce operations */
+void find_max_val(void *a, void *b, int *len, MPI_Datatype *dt);
+void find_min_val(void *in_param, void *inout_param, int *len, MPI_Datatype *dt);
 
 /* Objective functions */
 num_t elliptic_paraboloid(num_t *X, int nd);
