@@ -12,6 +12,16 @@
 /*
  * This function implements a custom max reduce operation by comparing the last
  * element in each input vector.
+ * Note that inout_param is both an input and an output parameter.
+ *
+ * Input parameters
+ * - in_param: array of len element (first operand)
+ * - inout_param: array of len element (second operand)
+ * - len: # of elements in the comm buffers (in_param and inout_param
+ * - dt: datatype
+ *
+ * Output parameters
+ * -inout_param: array of len element
  */
 void find_max_val(void *in_param, void *inout_param, int *len, MPI_Datatype *dt)
 {
@@ -50,6 +60,16 @@ void find_max_val(void *in_param, void *inout_param, int *len, MPI_Datatype *dt)
 /*
  * This function implements a custom min reduce operation by comparing the last
  * element in each input vector.
+ * Note that inout_param is both an input and an output parameter.
+ *
+ * Input parameters
+ * - in_param: array of len element (first operand)
+ * - inout_param: array of len element (second operand)
+ * - len: # of elements in the comm buffers (in_param and inout_param)
+ * - dt: datatype
+ *
+ * Output parameters
+ * -inout_param: array of len element
  */
 void find_min_val(void *in_param, void *inout_param, int *len, MPI_Datatype *dt)
 {
