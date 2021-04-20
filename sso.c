@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
     /* Set test case (check strtol errors) */
     errno = 0;
     tc = (int)strtol(argv[2], &endptr, 10);
-    if (errno != 0 || endptr == argv[1]) {
+    if (errno != 0 || endptr == argv[2]) {
         if (rank == 0) {
             printf("%s: error: invalid TC parameter\n", argv[0]);
         }
