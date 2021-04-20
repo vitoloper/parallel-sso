@@ -152,7 +152,7 @@ int main(int argc, char *argv[])
     best_solution_local[tc_params[tc].nd] = best_val_local;
 
     /* Print best solution and best objective function value (each process) */
-    print_vector(rank, best_solution_local, tc_params[tc].nd + 1);
+    // print_vector(rank, best_solution_local, tc_params[tc].nd + 1);
 
     /* Use MPI_Reduce to get the solution vector and the best OF value */
     if (tc_params[tc].goal == MIN_GOAL) {
