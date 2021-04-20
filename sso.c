@@ -108,8 +108,8 @@ int main(int argc, char *argv[])
     MPI_Type_commit(&row_result_type);
 
     /* Create custom reduce operations */
-    MPI_Op_create((MPI_User_function *)&find_min_val, 0, &custom_min_op);
-    MPI_Op_create((MPI_User_function *)&find_max_val, 0, &custom_max_op);
+    MPI_Op_create((MPI_User_function *)&find_min_val, 1, &custom_min_op);
+    MPI_Op_create((MPI_User_function *)&find_max_val, 1, &custom_max_op);
 
     /* Allocate space for local solution vectors (matrix) */
     /* Use BLOCK_SIZE macro to compute how many rows (solution vectors) each
