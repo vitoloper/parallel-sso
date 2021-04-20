@@ -147,8 +147,12 @@ int main(int argc, char *argv[])
     // print_matrix(rank, X_local, np_local, tc_params[tc].nd);
 
     /* Compute best solution */
-    compute_best_solution(tc_params[tc], X_local, np_local, best_solution_local,
-                          &best_val_local);
+    if (compute_best_solution(tc_params[tc], X_local, np_local,
+                              best_solution_local, &best_val_local) == -1) {
+        printf("(%d): memory allocation error in compute_best_solution\n",
+               rank);
+        MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
+    }
 
     /* Put best_val_local in the last vector position */
     best_solution_local[tc_params[tc].nd] = best_val_local;
