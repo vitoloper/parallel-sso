@@ -116,8 +116,32 @@ num_t griewangk(num_t *X, int nd)
     }
 
     for (i = 0; i < nd; i++) {
-        b *= cos(X[i] / sqrt((double)i+1));
+        b *= cos(X[i] / sqrt((double)i + 1));
     }
 
     return a - b + 1;
+}
+
+/*
+ * Schaffer function
+ *
+ * Input parameters
+ * - X:  input variables (decision variables) vector
+ * - nd:  number of decision variables
+ *
+ * Return value
+ * Function value at a given point
+ */
+num_t schaffer(num_t *X, int nd)
+{
+    num_t a;
+    num_t b;
+
+    a = sin(sqrt(X[0] * X[0] + X[1] * X[1])) *
+            sin(sqrt(X[0] * X[0] + X[1] * X[1])) -
+        0.5;
+    b = (1 + 0.001 * (X[0] * X[0] + X[1] * X[1])) *
+        (1 + 0.001 * (X[0] * X[0] + X[1] * X[1]));
+
+    return 0.5 + a / b;
 }

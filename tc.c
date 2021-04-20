@@ -112,4 +112,18 @@ void init_tc_params(struct tc_params_s *tc_params)
     tc_params[6].m_points = 20;
     tc_params[6].k_max = 30;
     tc_params[6].initial_velocity = 0.5;
+
+    /* Schaffer function */
+    tc_params[7].nd = 2;
+    tc_params[7].low = -100;
+    tc_params[7].high = 100;
+    tc_params[7].goal = MIN_GOAL;
+    tc_params[7].obj_func = schaffer;
+    tc_params[7].eta = 0.9;
+    tc_params[7].alpha = 0.1;
+    tc_params[7].beta = 4;
+    tc_params[7].delta_t = 1;
+    tc_params[7].m_points = 20;
+    tc_params[7].k_max = 30;
+    tc_params[7].initial_velocity = 0.5;
 }

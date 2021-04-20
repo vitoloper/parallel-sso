@@ -208,6 +208,7 @@ void print_usage(char *name)
     printf("3) Rastrigin function (two decision variables)\n");
     printf("4) Rastrigin function (five decision variables)\n");
     printf("5) Griewangk function (two decision variables)\n");
-    printf("6) Griewangk function (five decision variables)\n\n");
+    printf("6) Griewangk function (five decision variables)\n");
+    printf("7) Schaffer function\n\n");
     fflush(stdout);
 }
