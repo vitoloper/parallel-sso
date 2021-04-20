@@ -112,6 +112,8 @@ int main(int argc, char *argv[])
     MPI_Op_create((MPI_User_function *)&find_max_val, 0, &custom_max_op);
 
     /* Allocate space for local solution vectors (matrix) */
+    /* Use BLOCK_SIZE macro to compute how many rows (solution vectors) each
+     * process should handle */
     np_local = BLOCK_SIZE(rank, size, np);
     if (allocate_2d_matrix(&X_local, np_local, tc_params[tc].nd) == -1) {
         printf("(%d): matrix allocation error (X_local)\n", rank);
