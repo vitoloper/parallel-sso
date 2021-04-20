@@ -33,10 +33,6 @@ int main(int argc, char *argv[])
 
     MPI_Init(&argc, &argv);
 
-    /* Start the timer */
-    MPI_Barrier(MPI_COMM_WORLD);
-    elapsed_time = -MPI_Wtime();
-
     MPI_Comm_rank(MPI_COMM_WORLD, &rank); /* Get my rank */
     MPI_Comm_size(MPI_COMM_WORLD, &size); /* Get number of processes */
 
@@ -136,6 +132,10 @@ int main(int argc, char *argv[])
         printf("(%d): vector allocation error (best_solution)\n", rank);
         MPI_Abort(MPI_COMM_WORLD, EXIT_FAILURE);
     }
+
+    /* Start the timer */
+    MPI_Barrier(MPI_COMM_WORLD);
+    elapsed_time = -MPI_Wtime();
 
     /* Initialize local solution vectors */
     init_positions(X_local, np_local, tc_params[tc].nd, tc_params[tc].low,
