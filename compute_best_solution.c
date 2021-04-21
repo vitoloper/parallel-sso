@@ -37,16 +37,16 @@ int compute_best_solution(struct tc_params_s tc_params, num_t **X, int np,
     num_t ***Z;             /* next rotational positions */
     num_t *gradient_result; /* gradient */
     num_t *best_OF_vals;    /* best values calculated from the OF */
-    int i;
-    int j;
-    int k; /* step */
-    int m;
-    num_t R1;
-    num_t R2;
-    num_t R3;
-    num_t vel, vel_limit;
-    int vel_limit_idx;
-    num_t current_OF_val;
+    int i;                  /* iteration var [0,NP) */
+    int j;                  /* iteration var [0,ND) */
+    int k;                  /* iteration var [0,k_max) */
+    int m;                  /* # of points used in local search */
+    num_t R1;               /* random number between [0,1] */
+    num_t R2;               /* random number between [0,1] */
+    num_t R3;               /* random number between [-1,1] */
+    num_t vel, vel_limit;   /* velocity and velocity limit */
+    int vel_limit_idx;      /* velocity limit index (0 or 1) */
+    num_t current_OF_val;   /* used in loops to store OF value */
 
     /* Allocate space for V matrix */
     if (allocate_2d_matrix(&V, np, tc_params.nd) == -1) {
