@@ -63,7 +63,7 @@ void init_tc_params(struct tc_params_s *tc_params)
     tc_params[3].high = 20;
     tc_params[3].goal = MIN_GOAL;
     tc_params[3].obj_func = rastrigin;
-    tc_params[3].eta = 0.09;
+    tc_params[3].eta = 0.9;
     tc_params[3].alpha = 0.1;
     tc_params[3].beta = 4;
     tc_params[3].delta_t = 1;
@@ -77,7 +77,7 @@ void init_tc_params(struct tc_params_s *tc_params)
     tc_params[4].high = 20;
     tc_params[4].goal = MIN_GOAL;
     tc_params[4].obj_func = rastrigin;
-    tc_params[4].eta = 0.09;
+    tc_params[4].eta = 0.9;
     tc_params[4].alpha = 0.1;
     tc_params[4].beta = 4;
     tc_params[4].delta_t = 1;
