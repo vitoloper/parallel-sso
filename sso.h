@@ -27,6 +27,9 @@
 #define MIN_GOAL -1
 #define MAX_GOAL 1
 
+/* Differentiation step size */
+#define D_INCR 0.0001
+
 /* Basic C language type to use */
 typedef double num_t;
 

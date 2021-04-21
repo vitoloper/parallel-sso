@@ -223,7 +223,6 @@ int gradient(num_t (*f)(num_t *, int), num_t *X, int nd, num_t *result)
     int i;
     num_t *current_X_right; /* x + h*/
     num_t *current_X_left;  /* x - h*/
-    num_t h = 0.0001;       /* Step size */
 
     /* Allocate current_X_right */
     current_X_right = (num_t *)malloc(nd * sizeof(num_t));
@@ -242,10 +241,10 @@ int gradient(num_t (*f)(num_t *, int), num_t *X, int nd, num_t *result)
         memcpy(current_X_right, X, nd * sizeof(num_t));
         memcpy(current_X_left, X, nd * sizeof(num_t));
 
-        current_X_right[i] = X[i] + h;
-        current_X_left[i] = X[i] - h;
+        current_X_right[i] = X[i] + D_INCR;
+        current_X_left[i] = X[i] - D_INCR;
 
-        result[i] = (f(current_X_right, nd) - f(current_X_left, nd)) / (2 * h);
+        result[i] = (f(current_X_right, nd) - f(current_X_left, nd)) / (2.0 * D_INCR);
     }
 
     /* Free heap space */
