@@ -15,6 +15,8 @@
 
 /*
  * This function computes the best solution for a given objective function.
+ * It performs a maximization, so if a minimization is desired instead an
+ * objective function f(x) should be modified in order to return -f(x).
  *
  * Input parameters
  * - tc_params: test case parameters
@@ -96,7 +98,7 @@ int compute_best_solution(struct tc_params_s tc_params, num_t **X, int np,
 
             /* Compute velocities */
             for (j = 0; j < tc_params.nd; j++) {
-                vel = tc_params.goal * tc_params.eta * R1 * gradient_result[j] +
+                vel = tc_params.eta * R1 * gradient_result[j] +
                       tc_params.alpha * R2 * V[i][j];
 
                 /* Compute velocity limit */
@@ -134,10 +136,8 @@ int compute_best_solution(struct tc_params_s tc_params, num_t **X, int np,
             for (m = 0; m < tc_params.m_points; m++) {
                 current_OF_val = tc_params.obj_func(Z[i][m], tc_params.nd);
 
-                /* Use tc_params.goal to make comparison work either on both
-                 * maximization and minimization goals */
-                if (tc_params.goal * current_OF_val >
-                    tc_params.goal * best_OF_vals[i]) {
+                /* Compare current OF value with the best OF value stored */
+                if (current_OF_val > best_OF_vals[i]) {
                     memcpy(X[i], Z[i][m], tc_params.nd * sizeof(num_t));
                     best_OF_vals[i] = current_OF_val;
                 }
@@ -152,11 +152,15 @@ int compute_best_solution(struct tc_params_s tc_params, num_t **X, int np,
     for (i = 1; i < np; i++) {
         current_OF_val = best_OF_vals[i];
 
-        if (tc_params.goal * current_OF_val > tc_params.goal * (*best_val)) {
+        if (current_OF_val > *best_val) {
             memcpy(best_solution, X[i], tc_params.nd * sizeof(num_t));
             *best_val = current_OF_val;
         }
     }
+
+    /* If a minimization is performed, multiply by -1 (MIN_GOAL) because we need
+     * to "flip" the value (since the OF returns -f(x) ) */
+    *best_val = tc_params.goal * (*best_val);
 
     /* Free heap space */
     free_2d_matrix(&V, np);

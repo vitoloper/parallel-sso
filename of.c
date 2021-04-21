@@ -10,6 +10,7 @@
 
 /*
  * Elliptic paraboloid function
+ * Goal: minimization
  *
  * Input parameters
  * - X:  input variables (decision variables) vector
@@ -20,11 +21,12 @@
  */
 num_t elliptic_paraboloid(num_t *X, int nd)
 {
-    return X[0] * X[0] - 4 * X[0] * X[1] + 5 * X[1] * X[1] - 4 * X[1] + 3;
+    return -1.0*(X[0] * X[0] - 4 * X[0] * X[1] + 5 * X[1] * X[1] - 4 * X[1] + 3);
 }
 
 /*
  * Goldstein-Price function
+ * Goal: minimization
  *
  * Input parameters
  * - X:  input variables (decision variables) vector
@@ -45,12 +47,13 @@ num_t goldstein_price(num_t *X, int nd)
                   (18 - 32 * X[0] + 12 * X[0] * X[0] + 48 * X[1] -
                    36 * X[0] * X[1] + 27 * X[1] * X[1]));
 
-    return a * b;
+    return -1.0*(a * b);
 }
 
 /*
  * "Flipped" Golstein-Price function
- *
+ * Goal: maximization
+ * 
  * Input parameters
  * - X:  input variables (decision variables) vector
  * - nd:  number of decision variables
@@ -70,12 +73,13 @@ num_t flipped_goldstein_price(num_t *X, int nd)
                   (18 - 32 * X[0] + 12 * X[0] * X[0] + 48 * X[1] -
                    36 * X[0] * X[1] + 27 * X[1] * X[1]));
 
-    return -1 * a * b;
+    return -1.0*(a * b);
 }
 
 /*
  * Rastrigin function
- *
+ * Goal: minimization
+ * 
  * Input parameters
  * - X:  input variables (decision variables) vector
  * - nd:  number of decision variables
@@ -92,11 +96,12 @@ num_t rastrigin(num_t *X, int nd)
         val += X[i] * X[i] - 10 * cos(2 * M_PI * X[i]);
     }
 
-    return 10 * nd + val;
+    return -1.0*(10 * nd + val);
 }
 
 /*
  * Griewangk function
+ * Goal: minimization
  *
  * Input parameters
  * - X:  input variables (decision variables) vector
@@ -119,12 +124,13 @@ num_t griewangk(num_t *X, int nd)
         b *= cos(X[i] / sqrt((double)i + 1));
     }
 
-    return a - b + 1;
+    return -1.0*(a - b + 1);
 }
 
 /*
  * Schaffer function
- *
+ * Goal: minimization
+ * 
  * Input parameters
  * - X:  input variables (decision variables) vector
  * - nd:  number of decision variables
@@ -143,5 +149,5 @@ num_t schaffer(num_t *X, int nd)
     b = (1 + 0.001 * (X[0] * X[0] + X[1] * X[1])) *
         (1 + 0.001 * (X[0] * X[0] + X[1] * X[1]));
 
-    return 0.5 + a / b;
+    return -1.0*(0.5 + a / b);
 }
