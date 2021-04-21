@@ -147,10 +147,10 @@ int compute_best_solution(struct tc_params_s tc_params, num_t **X, int np,
 
     /* Choose the best solution among the NP solutions */
     memcpy(best_solution, X[0], tc_params.nd * sizeof(num_t));
-    *best_val = tc_params.obj_func(best_solution, tc_params.nd);
+    *best_val = best_OF_vals[0];
 
     for (i = 1; i < np; i++) {
-        current_OF_val = tc_params.obj_func(X[i], tc_params.nd);
+        current_OF_val = best_OF_vals[i];
 
         if (tc_params.goal * current_OF_val > tc_params.goal * (*best_val)) {
             memcpy(best_solution, X[i], tc_params.nd * sizeof(num_t));
