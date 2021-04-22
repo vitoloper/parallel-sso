@@ -46,7 +46,7 @@ int compute_best_solution(struct tc_params_s tc_params, num_t **X, int np,
     num_t R1;               /* random number between [0,1] */
     num_t R2;               /* random number between [0,1] */
     num_t R3;               /* random number between [-1,1] */
-    num_t vel, vel_limit;   /* velocity and velocity limit */
+    num_t velocities[2];    /* velocity (0) and velocity limit (1) */
     int vel_limit_idx;      /* velocity limit index (0 or 1) */
     num_t current_OF_val;   /* used in loops to store OF value */
 
@@ -96,22 +96,18 @@ int compute_best_solution(struct tc_params_s tc_params, num_t **X, int np,
                 return -1;
             }
 
-            /* Compute velocities */
+            /* Compute velocities and forward movement */
             for (j = 0; j < tc_params.nd; j++) {
-                vel = tc_params.eta * R1 * gradient_result[j] +
-                      tc_params.alpha * R2 * V[i][j];
+                /* Compute new velocity */
+                velocities[0] = tc_params.eta * R1 * gradient_result[j] +
+                                tc_params.alpha * R2 * V[i][j];
 
                 /* Compute velocity limit */
-                vel_limit = tc_params.beta * V[i][j];
-
-                vel_limit_idx = min_abs(vel, vel_limit);
+                velocities[1] = tc_params.beta * V[i][j];
 
                 /* Choose the velocity with the smallest abs value */
-                if (vel_limit_idx == 0) {
-                    V[i][j] = vel;
-                } else {
-                    V[i][j] = vel_limit;
-                }
+                vel_limit_idx = min_abs(velocities[0], velocities[1]);
+                V[i][j] = velocities[vel_limit_idx];
 
                 /* Set forward movement */
                 Y[i][j] = X[i][j] + V[i][j] * tc_params.delta_t;
